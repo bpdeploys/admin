@@ -37,7 +37,6 @@ const validationSchema = Yup.object().shape({
 
 export default function Register() {
   const router = useRouter();
-  const { setFormValues } = useFormData();
   const resolver = useYupValidationResolver(validationSchema);
   const { handleSubmit, register } = useForm({
     resolver,

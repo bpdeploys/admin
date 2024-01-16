@@ -1,4 +1,4 @@
-# Baller App
+# BP Admin App
 
 ## How to use
 

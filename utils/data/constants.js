@@ -10,15 +10,9 @@ const constants = {
     { label: 'Midfielder', value: 'Midfielder' },
     { label: 'Forward', value: 'Forward' },
   ],
-  POSITIONS_ABBREVIATED: [
-    { label: 'GK', value: 'Goalkeeper' },
-    { label: 'D', value: 'Defender' },
-    { label: 'M', value: 'Midfielder' },
-    { label: 'F', value: 'Forward' },
-  ],
   MOTIVES: [
-    { label: 'Recreational', value: 'Recreational' },
     { label: 'Competitive', value: 'Competitive' },
+    { label: 'Recreational', value: 'Recreational' },
   ],
   SQUAD_NUMBERS: [
     { label: '1', value: '1' },

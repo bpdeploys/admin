@@ -34,7 +34,7 @@ export default function Home() {
               size="small"
               customClassName={styles.home__button}
               color="white"
-              href="/register"
+              href="/sample-register"
             />
             <span className={styles.home__or}>Already have an account?</span>
             <Button
@@ -42,7 +42,7 @@ export default function Home() {
               size="small"
               customClassName={styles.home__button}
               color="blue"
-              href="/login"
+              href="/sample-clean"
             />
           </div>
         </section>
