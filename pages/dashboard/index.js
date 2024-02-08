@@ -9,6 +9,7 @@ const dashboardItems = [
   },
   {
     name: 'SportMapp',
+    route: '/sportmapp',
     img: '/assets/imgs/svgs/smLogo.svg',
   },
   {
@@ -49,6 +50,7 @@ const DashboardPage = () => {
                 key={dashboardItem}
                 name={dashboardItem.name}
                 img={dashboardItem.img}
+                route={dashboardItem.route}
               />
             ))}
           </div>

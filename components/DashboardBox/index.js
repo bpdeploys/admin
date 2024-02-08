@@ -1,6 +1,7 @@
 // Styles
 import Image from 'next/image';
 import styles from './dashboardbox.module.scss';
+import { useRouter } from 'next/router';
 
 /**
  * Profile Selection component
@@ -11,9 +12,15 @@ import styles from './dashboardbox.module.scss';
  *
  * @returns {React.Element} A Profile Selection element
  */
-const DashboardBox = ({ name, img, onClick }) => {
+const DashboardBox = ({ name, img, route }) => {
+  const router = useRouter();
+
+  const onSelectBox = () => {
+    router.push(route || '/dashboard');
+  };
+
   return (
-    <div className={styles.box} onClick={onClick}>
+    <div className={styles.box} onClick={() => onSelectBox()}>
       <span>{name}</span>
       {img && <Image src={img} width={40} height={40} />}
     </div>

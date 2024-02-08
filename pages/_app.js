@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { SquadProvider } from '../context/SquadContext';
 import { AuthProvider } from '../context/useAuth';
 import { Roboto } from 'next/font/google';
+import { SportsmappProvider } from '../context/SportsmappContext';
 
 const roboto = Roboto({
   weight: ['400', '700'],
@@ -16,10 +17,12 @@ const roboto = Roboto({
 function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
-      <ToastContainer />
-      <main className={roboto.className}>
-        <Component {...pageProps} />
-      </main>
+      <SportsmappProvider>
+        <ToastContainer />
+        <main className={roboto.className}>
+          <Component {...pageProps} />
+        </main>
+      </SportsmappProvider>
     </AuthProvider>
   );
 }

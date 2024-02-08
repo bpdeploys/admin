@@ -1,0 +1,30 @@
+.heading {
+  width: 100%;
+  border-bottom: 1px solid lightgray;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+
+  h1 {
+    font-size: 18px;
+    margin-left: 1.5rem;
+  }
+}
+
+.content {
+  padding: 0 2.5rem;
+
+  h2 {
+    font-size: 18px;
+  }
+}
+
+.category {
+  margin-top: 3rem;
+}
+
+.boxes {
+  display: flex;
+  gap: 4%;
+  flex-wrap: wrap;
+}
