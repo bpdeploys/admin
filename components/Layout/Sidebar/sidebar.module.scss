@@ -1,0 +1,27 @@
+.sidebar {
+  nav {
+    width: 220px;
+    background: white;
+    height: 80vh;
+    margin: 10px;
+    border-radius: 5px;
+  }
+
+  h4 {
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin-left: 15px;
+
+    li {
+      padding: 10px;
+      // Add styles for your list items
+    }
+  }
+}

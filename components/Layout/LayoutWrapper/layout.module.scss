@@ -1,0 +1,11 @@
+.layout {
+  display: flex;
+  height: calc(100vh - 55px);
+  background-color: #f0f0f0;
+}
+
+.content {
+  flex-grow: 1;
+  background-color: white;
+  margin: 10px;
+}

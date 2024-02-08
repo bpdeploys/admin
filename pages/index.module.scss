@@ -1,50 +1,31 @@
-.home {
+.mainContent {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 100vh;
-  &__logo {
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    margin-top: 130px;
-  }
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 60px); 
+  background-color: #f2f1f1;
+}
 
-  &__headings {
-    display: flex;
-    flex-direction: column;
-    min-height: 80px;
-    justify-content: space-around;
-    margin-left: 15px;
+.whiteBox {
+  background-color: white;
+  padding: 2rem;
+  width: 50%; 
+  max-width: 600px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
 
-    h1 {
-      color: #fff;
-      font-size: 16px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
-    }
+.placeholderImage {
+  height: 300px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    h2 {
-      color: #fff;
-      font-size: 40px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: normal;
-    }
-  }
-
-  &__buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 90px;
-
-    span {
-      margin: 15px 0;
-      font-size: 12px;
-      color: #fff;
-    }
-  }
+.descriptionText {
+  margin-top: 1rem;
+  color: #333;
+  font-size: 1rem;
 }

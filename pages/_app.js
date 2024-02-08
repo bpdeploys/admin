@@ -3,18 +3,24 @@ import localFont from 'next/font/local';
 import '../styles.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import { SquadProvider } from '../context/SquadContext';
+import { AuthProvider } from '../context/useAuth';
+import { Roboto } from 'next/font/google';
 
-// Font files can be colocated inside of `pages`
-const futuraBook = localFont({ src: '../public/assets/fonts/futura-book.ttf' });
+const roboto = Roboto({
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 function MyApp({ Component, pageProps }) {
   return (
-    <SquadProvider>
+    <AuthProvider>
       <ToastContainer />
-      <main className={futuraBook.className}>
+      <main className={roboto.className}>
         <Component {...pageProps} />
       </main>
-    </SquadProvider>
+    </AuthProvider>
   );
 }
 

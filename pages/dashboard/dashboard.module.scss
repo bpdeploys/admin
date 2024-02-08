@@ -1,0 +1,21 @@
+.heading {
+  width: 100%;
+  border-bottom: 1px solid lightgray;
+  padding: 1rem;
+
+  h1 {
+    font-size: 18px;
+    margin-left: 1.5rem;
+  }
+}
+
+.content {
+  padding: 2.5rem;
+}
+
+.boxes {
+  display: flex;
+  justify-content: space-around;
+  gap: 10%;
+  flex-wrap: wrap;
+}

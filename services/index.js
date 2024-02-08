@@ -30,7 +30,7 @@ export const createPlayerProfile = async (playerProfile) => {
 };
 
 // POST MODEL WITH TOKEN
-export const createTeam = async (teamInformation) => {
+export const fetchUserData = async () => {
   try {
     // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
@@ -46,41 +46,11 @@ export const createTeam = async (teamInformation) => {
     };
 
     // Make the POST request with the headers
-    const response = await api.post('/teams/', teamInformation, { headers });
+    const response = await api.get('/current-user/', { headers });
     return response.data;
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while creating the team');
-  }
-};
-
-export const getProxyData = async (code) => {
-  try {
-    const response = await api.get(`/players/proxy/get-proxy?code=${code}`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('An error occurred while fetching proxy data');
-  }
-};
-
-export const getProxyCodes = async (teamId) => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No token found');
-    }
-    const headers = {
-      Authorization: `Token ${token}`,
-    };
-
-    const response = await api.get(`/players/proxy?team_id=${teamId}`, {
-      headers,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('An error occurred while fetching squad codes data');
   }
 };
 
@@ -91,29 +61,5 @@ export const loginRequest = async (credentials) => {
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while logging in');
-  }
-};
-
-export const createProxyPlayerSquad = async (proxyPlayersData) => {
-  try {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      throw new Error('No token found');
-    }
-
-    const headers = {
-      Authorization: `Token ${token}`,
-    };
-
-    const response = await api.post(
-      '/players/proxy/bulk-create/',
-      proxyPlayersData,
-      { headers }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('An error occurred while creating your squad');
   }
 };

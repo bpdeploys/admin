@@ -2,6 +2,9 @@ import { useRouter } from 'next/router';
 
 // Styles
 import styles from './header.module.scss';
+import Image from 'next/image';
+
+import logo from '../../../public/assets/imgs/svgs/logo.svg';
 
 /**
  * Header component
@@ -13,49 +16,22 @@ import styles from './header.module.scss';
  *
  * @returns {React.Element} A header element
  */
-const Header = ({
-  text,
-  textTransform,
-  noItalic,
-  logo,
-  shadow = true,
-  children,
-}) => {
+const Header = ({ button }) => {
   const router = useRouter();
 
   return (
-    <header>
-      <div
-        className={styles.header}
-        style={{
-          boxShadow: shadow ? '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' : 'none',
-        }}
-      >
-        {logo && (
-          <img
-            className={styles.logo}
-            src="/assets/imgs/svgs/homeLogo.svg"
-            alt="Baller Logo"
-            width={50}
-            height={50}
-            onClick={() => router.push('/')}
-          />
-        )}
-        <div
-          className={styles.text}
-          style={{
-            textTransform: textTransform || 'none',
-            fontStyle: noItalic
-              ? 'normal'
-              : textTransform
-              ? 'italic'
-              : 'normal',
-          }}
-        >
-          {text}
-        </div>
+    <header className={styles.header}>
+      <div className={styles.logo}>
+        <Image src="/assets/imgs/svgs/logo.svg" width={50} height={50} />
       </div>
-      {children}
+      {button && (
+        <button
+          onClick={() => router.push('/login')}
+          className={styles.loginButton}
+        >
+          Login
+        </button>
+      )}
     </header>
   );
 };
