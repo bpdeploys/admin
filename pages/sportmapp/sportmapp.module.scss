@@ -12,7 +12,9 @@
 }
 
 .content {
-  padding: 0 2.5rem;
+  padding: 0 2.5rem 2.5rem 2.5rem;
+  overflow: auto;
+  height: 85vh;
 
   h2 {
     font-size: 18px;
