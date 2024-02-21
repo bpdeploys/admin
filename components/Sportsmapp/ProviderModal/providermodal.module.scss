@@ -1,0 +1,47 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+}
+
+.logoButton {
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 4rem;
+}
+
+.logoImage {
+  object-fit: cover;
+  border-radius: 50%;
+  height: 120px;
+  width: 120px;
+}
+
+.inputField {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #000;
+  margin: 10px 0;
+  padding: 10px 0;
+  width: 80%;
+}
+
+.submitButton {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 30px;
+  cursor: pointer;
+  width: 252px;
+  border-radius: 10px;
+  margin-top: 4rem;
+}

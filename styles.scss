@@ -10,8 +10,6 @@
 }
 
 body {
-  box-sizing: border-box;
-  touch-action: pan-y;
   user-select: none;
 }
 
@@ -23,6 +21,7 @@ body,
 html {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 ::selection {

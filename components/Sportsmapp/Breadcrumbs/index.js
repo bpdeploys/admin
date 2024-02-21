@@ -6,6 +6,8 @@ const Breadcrumbs = () => {
   const { selectedProvider, selectedVenue, selectedLeague } =
     useSportsmappContext();
 
+  console.log(selectedVenue);
+
   return (
     <div className={styles.breadcrumbs}>
       <h1>SportMapp </h1>

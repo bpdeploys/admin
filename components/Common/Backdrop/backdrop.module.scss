@@ -1,0 +1,17 @@
+.backdropContainer {
+  display: none; /* default to none, will be overridden by a class when show is true */
+}
+
+.show {
+  display: block !important; /* use !important to override the default style when this class is applied */
+}
+
+.backdropOverlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 100; /* default value, can be overridden inline */
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}

@@ -6,7 +6,11 @@ import styles from './sportmapp.module.scss';
 import Breadcrumbs from '../../components/Sportsmapp/Breadcrumbs';
 import { useSportsmappContext } from '../../context/SportsmappContext';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Modal from '../../components/Common/Modal';
+import ProviderModal from '../../components/Sportsmapp/ProviderModal';
+import GreenArrowButton from '../../components/Sportsmapp/GreenArrowBtn';
+import BlueButton from '../../components/Sportsmapp/BlueBtn';
 
 const sportsData = [
   {
@@ -68,9 +72,14 @@ const sportsData = [
   },
 ];
 
-const DashboardPage = () => {
+const SportmappPage = () => {
   const router = useRouter();
   const { selectProvider } = useSportsmappContext();
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
 
   // Clear provider to avoid breadcrumb issues
   useEffect(() => {
@@ -84,10 +93,23 @@ const DashboardPage = () => {
 
   return (
     <Layout>
+      <ProviderModal showModal={showModal} toggleModal={toggleModal} />
       <div className={styles.dashboard}>
         <div className={styles.heading}>
-          <Image src="/assets/imgs/svgs/smLogo.svg" height={25} width={25} />
-          <Breadcrumbs />
+          <div>
+            <Image src="/assets/imgs/svgs/smLogo.svg" height={25} width={25} />
+            <Breadcrumbs />
+          </div>
+          <div>
+            <BlueButton
+              text="SportMapp Metrics"
+              onClick={() => toggleModal()}
+            />
+            <GreenArrowButton
+              text="Create New Provider"
+              onClick={() => toggleModal()}
+            />
+          </div>
         </div>
         <div className={styles.content}>
           <div className={styles.category}>
@@ -121,4 +143,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default SportmappPage;

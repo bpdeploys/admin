@@ -1,0 +1,66 @@
+.box {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 210px;
+  height: 140px;
+  padding: 10px;
+  border: 1px solid rgba(242, 241, 241, 1);
+  border-radius: 2px;
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.25);
+  transition: all ease-out 0.3s;
+  cursor: pointer;
+  margin-top: 30px;
+
+  &:hover {
+    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+
+  h3 {
+    font-size: 18px;
+    width: 110px;
+  }
+
+  .leagueNumber {
+    color: #747473;
+    font-size: 10px;
+    height: 15px;
+    width: 15px;
+    border: 1px solid gray;
+    text-align: center;
+    border-radius: 50%;
+  }
+
+  .tags {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-size: 9px;
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+
+    span {
+      text-wrap: nowrap;
+      padding: 2px 4px;
+      border-radius: 10px;
+      text-align: center;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .blueTag {
+      background-color: #0e4980;
+    }
+
+    .greenTag {
+      background-color: #0b780f;
+    }
+    .grayTag {
+      background-color: #d9d9d9;
+    }
+    .orangeTag {
+      background-color: #ab880c;
+    }
+  }
+}
