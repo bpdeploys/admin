@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/useAuth';
 import styles from './login.module.scss';
-import Header from '../../components/Layout/Header';
+import HomeHeader from '../../components/Layout/HomeHeader';
 
 const Login = () => {
   const { login, isLoading } = useAuth();
@@ -15,7 +15,7 @@ const Login = () => {
 
   return (
     <>
-      <Header />
+      <HomeHeader />
       <div className={styles.loginContainer}>
         <form onSubmit={handleSubmit} className={styles.loginForm}>
           <h1>Login</h1>

@@ -9,134 +9,40 @@ import { useEffect, useState } from 'react';
 import BlueButton from '../../../components/Sportsmapp/BlueBtn';
 import GreenArrowButton from '../../../components/Sportsmapp/GreenArrowBtn';
 import VenuesModal from '../../../components/Sportsmapp/VenuesModal';
-
-const venuesData = [
-  {
-    name: 'Arlington',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'Barnet',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'East Finchley',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'Finchley',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'Arlington',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'Barnet',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'East Finchley',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'Finchley',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'Arlington',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'Barnet',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'East Finchley',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-  {
-    name: 'Finchley',
-    blueTag: "3 VM's",
-    greenTag: '6 leagues',
-    redTag: '45 teams',
-    orangeTag: '175 players',
-    sportIcon: 'footballIcon.svg',
-    sponsor: '3 sponsored leagues',
-  },
-];
+import { fetchAllVenuesByProvider } from '../../../services';
 
 const VenuesPage = () => {
   const router = useRouter();
-  const { selectVenue } = useSportsmappContext();
+  const { selectedProvider, selectVenue } = useSportsmappContext();
+  const [venuesData, setVenuesData] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (selectedProvider) {
+          const venues = await fetchAllVenuesByProvider(1);
+          setVenuesData(venues);
+        }
+      } catch (error) {
+        console.error('Error fetching venues:', error);
+      }
+    };
+
+    fetchData();
+  }, [selectedProvider]);
+
   // Clear venue to avoid breadcrumb issues
   useEffect(() => {
     selectVenue(null);
   }, []);
 
-  const onSelectVenue = (provider) => {
-    selectVenue(provider);
+  const onSelectVenue = (venue) => {
+    selectVenue(venue);
     router.push('/sportmapp/venues/leagues');
   };
 
@@ -164,16 +70,16 @@ const VenuesPage = () => {
           <div className={styles.boxes}>
             {venuesData.map((venue) => (
               <TagBox
-                key={venue.name}
+                key={venue.id}
                 onClick={() => onSelectVenue(venue)}
                 title={venue.name}
-                blueTag={venue.blueTag}
-                greenTag={venue.greenTag}
-                redTag={venue.redTag}
-                orangeTag={venue.orangeTag}
-                region={venue.region}
-                sportIcon={venue.sportIcon}
-                sponsor={venue.sponsor}
+                blueTag={`${venue.sport_entity?.staff?.venue_managers?.length} VM's`}
+                greenTag={`${venue.sport_entity.name} leagues`}
+                redTag={`${venue.count_teams} teams`}
+                orangeTag={`${venue.count_players} players`}
+                // Assuming you have a mapping of sport icons based on sport names
+                sportIcon={`${venue.sport_entity.name.toLowerCase()}Icon.svg`}
+                sponsor={`${venue.sponsor_count} sponsored leagues`}
               />
             ))}
           </div>

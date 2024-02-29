@@ -6,7 +6,8 @@ const Breadcrumbs = () => {
   const { selectedProvider, selectedVenue, selectedLeague } =
     useSportsmappContext();
 
-  console.log(selectedVenue);
+  console.log('BREADCRUMB DATA - VENUE:', selectedVenue);
+  console.log('BREADCRUMB DATA - LEAGUE:', selectedLeague);
 
   return (
     <div className={styles.breadcrumbs}>
@@ -26,7 +27,7 @@ const Breadcrumbs = () => {
       {selectedLeague && (
         <>
           <BreadcrumbDivider />
-          <span>{selectedLeague.name}</span>
+          <span>{selectedLeague.league_name}</span>
         </>
       )}
     </div>

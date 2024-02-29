@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
 
   // Function to refresh authentication status
   const refreshAuth = async () => {
-    const token = window.localStorage.getItem('TOKEN');
+    const token = window.localStorage.getItem('token');
     if (token) {
       setIsLoading(true);
       try {
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
         setUserInfo(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        window.localStorage.removeItem('TOKEN');
+        window.localStorage.removeItem('token');
         setUserInfo(null);
       } finally {
         setIsLoading(false);
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await loginRequest(credentials);
       if (data && 'key' in data) {
-        window.localStorage.setItem('TOKEN', data.key);
+        window.localStorage.setItem('token', data.key);
         await refreshAuth();
         Router.push('/dashboard');
       } else {
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   // Function to handle logout
   const logout = () => {
-    window.localStorage.removeItem('TOKEN');
+    window.localStorage.removeItem('token');
     setUserInfo(null);
     Router.push('/');
   };

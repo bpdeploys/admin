@@ -15,55 +15,13 @@ import PitchesModal from '../../../../components/Sportsmapp/PitchesModal';
 import RefereesModal from '../../../../components/Sportsmapp/RefereesModal';
 import VenuesManagerModal from '../../../../components/Sportsmapp/VenueManagerModal';
 import LeaguesModal from '../../../../components/Sportsmapp/LeaguesModal';
-
-const leaguesData = [
-  {
-    name: 'Monday Night Football',
-    numTeams: '10 teams',
-    type: '7 aside',
-    numPlayers: '80 players',
-    currentCount: '82 / 90',
-    leagueNumber: '5',
-    weekDay: 'Monday',
-  },
-  {
-    name: 'Tuesday Games',
-    numTeams: '10 teams',
-    type: '7 aside',
-    currentCount: '82 / 90',
-    leagueNumber: '5',
-    weekDay: 'Tuesday',
-  },
-  {
-    name: 'Tuesday Masters',
-    numTeams: '10 teams',
-    type: '7 aside',
-    currentCount: '82 / 90',
-    leagueNumber: '5',
-    weekDay: 'Tuesday',
-  },
-  {
-    name: 'Friday Night Football',
-    numTeams: '10 teams',
-    type: '7 aside',
-    currentCount: '82 / 90',
-    leagueNumber: '5',
-    weekDay: 'Friday',
-  },
-  {
-    name: 'Friday Games',
-    numTeams: '10 teams',
-    type: '7 aside',
-    currentCount: '82 / 90',
-    leagueNumber: '5',
-    weekDay: 'Friday',
-  },
-];
+import { fetchAllLeaguesByVenue } from '../../../../services';
 
 const LeaguesPage = () => {
   const router = useRouter();
-  const { selectLeague } = useSportsmappContext();
+  const { selectLeague, selectedVenue } = useSportsmappContext();
   const [showModal, setShowModal] = useState(false);
+  const [leaguesData, setLeaguesData] = useState([]); // State to store fetched leagues data
   const [showPitchesModal, setShowPitchesModal] = useState(false);
   const [showRefereesModal, setShowRefereesModal] = useState(false);
   const [showVenueManagersModal, setShowVenueManagersModal] = useState(false);
@@ -75,6 +33,20 @@ const LeaguesPage = () => {
   const toggleRefereesModal = () => setShowRefereesModal(!showRefereesModal);
   const toggleVenueManagersModal = () =>
     setShowVenueManagersModal(!showVenueManagersModal);
+
+  // Fetch leagues data when component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchAllLeaguesByVenue(selectedVenue.id);
+        setLeaguesData(data); // Set fetched data to state
+      } catch (error) {
+        console.error('Error fetching leagues:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Clear venue to avoid breadcrumb issues
   useEffect(() => {
@@ -151,18 +123,30 @@ const LeaguesPage = () => {
             <h2>Leagues • {leaguesData.length}</h2>
           </div>
           <div className={styles.boxes}>
-            {leaguesData.map((league) => (
-              <LeagueBox
-                key={league.name}
-                onClick={() => onSelectLeague(league)}
-                title={league.name}
-                blueTag={league.numTeams}
-                greenTag={league.type}
-                grayTag={league.currentCount}
-                orangeTag={league.numPlayers}
-                leagueNumber={league.leagueNumber}
-              />
-            ))}
+            {leaguesData.map((league) => {
+              // Calculate total number of players for this league
+              const totalPlayers = league.teams_in_league.reduce(
+                (total, teamData) => {
+                  return total + teamData.team.number_of_players;
+                },
+                0
+              );
+
+              return (
+                <LeagueBox
+                  key={league.id} // Use a unique identifier for the key
+                  onClick={() => onSelectLeague(league)}
+                  title={league.league_name}
+                  blueTag={`${league.number_of_teams} teams`}
+                  greenTag={league.sport_entity.name}
+                  grayTag={`82 / 90`}
+                  orangeTag={
+                    totalPlayers > 0 ? `${totalPlayers} players` : null
+                  }
+                  leagueNumber={league.id.toString()}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

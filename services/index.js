@@ -9,9 +9,28 @@ const api = axios.create({
 });
 
 // GET MODEL
-export const fetchAllLeagueProviders = async () => {
+export const fetchAllLeaguesByVenue = async (selectedVenue) => {
   try {
-    const response = await api.get('/sport-entities?filter_by=league_provider');
+    const response = await api.get(`/leagues?venue_id=${selectedVenue}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchAllVenuesByProvider = async (selectedProvider) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.get(`/venues?entity_id=${selectedProvider}`, {
+      headers,
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -19,18 +38,18 @@ export const fetchAllLeagueProviders = async () => {
 };
 
 // POST MODEL
-export const createPlayerProfile = async (playerProfile) => {
+export const createLeaguess = async (playerProfile) => {
   try {
-    const response = await api.post('/auth/register/', playerProfile);
+    const response = await api.post('/leagues/', playerProfile);
     return response.data;
   } catch (error) {
     console.error(error);
-    throw new Error('An error occurred while creating the player profile');
+    throw new Error('An error occurred while creating the league');
   }
 };
 
 // POST MODEL WITH TOKEN
-export const fetchUserData = async () => {
+export const createLeague = async (league) => {
   try {
     // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
@@ -46,6 +65,23 @@ export const fetchUserData = async () => {
     };
 
     // Make the POST request with the headers
+    const response = await api.post('/leagues/', league, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the league');
+  }
+};
+
+export const fetchUserData = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
     const response = await api.get('/current-user/', { headers });
     return response.data;
   } catch (error) {
@@ -57,6 +93,26 @@ export const fetchUserData = async () => {
 export const loginRequest = async (credentials) => {
   try {
     const response = await api.post('/auth/login/', credentials);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while logging in');
+  }
+};
+
+export const createReferee = async (data) => {
+  try {
+    const response = await api.post('/register/', data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the referee');
+  }
+};
+
+export const getReferees = async (credentials) => {
+  try {
+    const response = await api.get('/referees/2', credentials);
     return response.data;
   } catch (error) {
     console.error(error);
