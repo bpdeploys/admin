@@ -90,7 +90,7 @@ const LeaguesModal = ({
             'League Logo'
           )}
         </label>
-        <div>
+        <div className={styles.inputs}>
           <input
             type="text"
             placeholder="League Name"
