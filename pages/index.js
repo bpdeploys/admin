@@ -1,11 +1,12 @@
 import Image from 'next/image';
 import Header from '../components/Layout/Header';
 import styles from './index.module.scss';
+import HomeHeader from '../components/Layout/HomeHeader';
 
 const Home = () => {
   return (
     <div>
-      <Header button />
+      <HomeHeader />
       <main className={styles.mainContent}>
         <div className={styles.whiteBox}>
           <div className={styles.placeholderImage}>
