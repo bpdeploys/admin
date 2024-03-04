@@ -37,7 +37,7 @@ const RefereesModal = ({ showModal, toggleModal, selectedVenue }) => {
       modalClosed={toggleModal}
       title={`${refereesData.length} REFEREES`}
       width="50%"
-      hideActions={showCreationModal}
+      hideActions={showCreationModal || selectedReferee}
     >
       <div className={styles.container}>
         {showCreationModal && (
