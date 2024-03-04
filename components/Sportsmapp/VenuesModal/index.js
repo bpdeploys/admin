@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import Modal from '../../Common/Modal';
+import { createVenue } from '../../../services';
 import styles from './venuesmodal.module.scss';
 
-const VenuesModal = ({ showModal, toggleModal }) => {
+const VenuesModal = ({
+  showModal,
+  toggleModal,
+  selectedProvider,
+  onVenueCreated,
+}) => {
   const [logo, setLogo] = useState(null);
+  const [name, setName] = useState('');
+  const [mainSport, setMainSport] = useState('');
+  const [region, setRegion] = useState('');
+  const [postcode1, setPostcode1] = useState('');
+  const [postcode2, setPostcode2] = useState('');
 
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
@@ -13,6 +24,22 @@ const VenuesModal = ({ showModal, toggleModal }) => {
         setLogo(e.target.result);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const venue = {
+        name,
+        postcode1: 1,
+        postcode2: '5TL',
+        sport_entity: selectedProvider,
+      };
+
+      await createVenue(venue);
+      onVenueCreated(); // Call the function to handle venue creation success
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -37,14 +64,40 @@ const VenuesModal = ({ showModal, toggleModal }) => {
           type="text"
           placeholder="Venue Name"
           className={styles.inputField}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <input
           type="text"
           placeholder="Main Sport"
           className={styles.inputField}
+          value={mainSport}
+          onChange={(e) => setMainSport(e.target.value)}
         />
-        <input type="text" placeholder="Region" className={styles.inputField} />
-        <button className={styles.submitButton}>Create Venue</button>
+        <input
+          type="text"
+          placeholder="Region"
+          className={styles.inputField}
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+        />
+        {/* <input
+          type="text"
+          placeholder="Postcode 1"
+          className={styles.inputField}
+          value={postcode1}
+          onChange={(e) => setPostcode1(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Postcode 2"
+          className={styles.inputField}
+          value={postcode2}
+          onChange={(e) => setPostcode2(e.target.value)}
+        /> */}
+        <button className={styles.submitButton} onClick={handleSubmit}>
+          Create Venue
+        </button>
       </div>
     </Modal>
   );

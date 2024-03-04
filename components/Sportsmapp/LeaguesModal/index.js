@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import Modal from '../../Common/Modal';
-import styles from './leaguesmodal.module.scss';
 import { createLeague } from '../../../services';
+import styles from './leaguesmodal.module.scss';
 
-const LeaguesModal = ({ showModal, toggleModal, onLeagueCreated }) => {
+const LeaguesModal = ({
+  showModal,
+  toggleModal,
+  onLeagueCreated,
+  selectedVenue,
+  selectedProvider,
+}) => {
   const [logo, setLogo] = useState(null);
   const [leagueName, setLeagueName] = useState('');
   const [leagueFormat, setLeagueFormat] = useState('');
@@ -32,13 +38,18 @@ const LeaguesModal = ({ showModal, toggleModal, onLeagueCreated }) => {
   };
 
   const handleSubmit = async () => {
-    console.log('testr');
+    // Format creation date to YYYY-MM-DD format
+    const formattedCreationDate = new Date().toISOString().split('T')[0];
+
+    // Format start date to YYYY-MM-DD HH:MM:SS format
+    const formattedStartDate = new Date(startDate).toISOString();
+
     try {
       const leagueData = {
         league_name: leagueName,
         league_format: leagueFormat,
-        creation_date: creationDate,
-        start_date: startDate,
+        creation_date: formattedCreationDate,
+        start_date: formattedStartDate,
         max_number_of_teams: maxNumberOfTeams,
         min_number_of_teams: minNumberOfTeams,
         season: season,
@@ -46,8 +57,8 @@ const LeaguesModal = ({ showModal, toggleModal, onLeagueCreated }) => {
         status: status,
         match_day: matchDay,
         competition: competition,
-        sport_entity: sportEntity,
-        venue: venue,
+        sport_entity: selectedProvider,
+        venue: selectedVenue,
         sport: sport,
       };
       // Call createLeague function to create the league
@@ -59,7 +70,6 @@ const LeaguesModal = ({ showModal, toggleModal, onLeagueCreated }) => {
       }
     } catch (error) {
       console.error('Error creating league:', error);
-      // Handle error here, display error message to the user
     }
   };
 
@@ -96,14 +106,7 @@ const LeaguesModal = ({ showModal, toggleModal, onLeagueCreated }) => {
             onChange={(e) => setLeagueFormat(e.target.value)}
           />
           <input
-            type="date"
-            placeholder="Creation Date"
-            className={styles.inputField}
-            value={creationDate}
-            onChange={(e) => setCreationDate(e.target.value)}
-          />
-          <input
-            type="date"
+            type="datetime-local"
             placeholder="Start Date"
             className={styles.inputField}
             value={startDate}
@@ -125,20 +128,6 @@ const LeaguesModal = ({ showModal, toggleModal, onLeagueCreated }) => {
           />
           <input
             type="text"
-            placeholder="Season"
-            className={styles.inputField}
-            value={season}
-            onChange={(e) => setSeason(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Postcode"
-            className={styles.inputField}
-            value={postcode}
-            onChange={(e) => setPostcode(e.target.value)}
-          />
-          <input
-            type="text"
             placeholder="Status"
             className={styles.inputField}
             value={status}
@@ -157,20 +146,6 @@ const LeaguesModal = ({ showModal, toggleModal, onLeagueCreated }) => {
             className={styles.inputField}
             value={competition}
             onChange={(e) => setCompetition(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Sport Entity"
-            className={styles.inputField}
-            value={sportEntity}
-            onChange={(e) => setSportEntity(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Venue"
-            className={styles.inputField}
-            value={venue}
-            onChange={(e) => setVenue(e.target.value)}
           />
           <input
             type="text"

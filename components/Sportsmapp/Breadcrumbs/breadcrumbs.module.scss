@@ -1,6 +1,11 @@
 .breadcrumbs {
   display: flex;
   align-items: center;
+
+  a {
+    display: flex;
+    align-items: center;
+  }
   h1,
   span {
     font-size: 18px;

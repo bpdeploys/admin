@@ -1,87 +1,39 @@
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import TagBox from '../../components/Common/TagBox';
-import DashboardBox from '../../components/DashboardBox';
-import Layout from '../../components/Layout/LayoutWrapper';
-import styles from './sportmapp.module.scss';
+import ProviderModal from '../../components/Sportsmapp/ProviderModal';
+import BlueButton from '../../components/Sportsmapp/BlueBtn';
+import GreenArrowButton from '../../components/Sportsmapp/GreenArrowBtn';
 import Breadcrumbs from '../../components/Sportsmapp/Breadcrumbs';
+import Layout from '../../components/Layout/LayoutWrapper';
+import TagBox from '../../components/Common/TagBox';
 import { useSportsmappContext } from '../../context/SportsmappContext';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import Modal from '../../components/Common/Modal';
-import ProviderModal from '../../components/Sportsmapp/ProviderModal';
-import GreenArrowButton from '../../components/Sportsmapp/GreenArrowBtn';
-import BlueButton from '../../components/Sportsmapp/BlueBtn';
-
-const sportsData = [
-  {
-    category: 'UK - Football',
-    count: 3,
-    providers: [
-      {
-        name: 'Powerleague',
-        locations: 18,
-        leagues: 45,
-        teams: 360,
-        players: 2880,
-        icon: 'footballIcon.svg', // Assuming you are using a font icon library
-        region: 'UK',
-      },
-      {
-        name: 'Goals Soccer Centres',
-        locations: 18,
-        leagues: 45,
-        teams: 360,
-        players: 2880,
-        icon: 'footballIcon.svg',
-        region: 'UK',
-      },
-      {
-        name: 'GoMammoth',
-        locations: 18,
-        leagues: 45,
-        teams: 360,
-        players: 2880,
-        icon: 'footballIcon.svg',
-        region: 'UK',
-      },
-    ],
-  },
-  {
-    category: 'UK - Basketball',
-    count: 2,
-    providers: [
-      {
-        name: 'Power Play',
-        locations: 18,
-        leagues: 45,
-        teams: 360,
-        players: 2880,
-        icon: 'basketballIcon.svg', // This icon name is just a placeholder
-        region: 'UK',
-      },
-      {
-        name: 'GoMammoth',
-        locations: 18,
-        leagues: 45,
-        teams: 360,
-        players: 2880,
-        icon: 'basketballIcon.svg',
-        region: 'UK',
-      },
-    ],
-  },
-];
+import { fetchAllProviders } from '../../services';
+import styles from './sportmapp.module.scss';
 
 const SportmappPage = () => {
   const router = useRouter();
   const { selectProvider } = useSportsmappContext();
   const [showModal, setShowModal] = useState(false);
+  const [sportsData, setSportsData] = useState([]);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-  // Clear provider to avoid breadcrumb issues
+  const fetchProviders = async () => {
+    try {
+      const providers = await fetchAllProviders(1);
+      setSportsData(providers);
+    } catch (error) {
+      console.error('Error fetching providers:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProviders();
+  }, []);
+
   useEffect(() => {
     selectProvider(null);
   }, []);
@@ -91,9 +43,18 @@ const SportmappPage = () => {
     router.push('/sportmapp/venues');
   };
 
+  const handleProviderCreated = () => {
+    fetchProviders();
+    toggleModal();
+  };
+
   return (
     <Layout>
-      <ProviderModal showModal={showModal} toggleModal={toggleModal} />
+      <ProviderModal
+        showModal={showModal}
+        toggleModal={toggleModal}
+        onProviderCreated={handleProviderCreated} // Pass the function to handle provider creation
+      />
       <div className={styles.dashboard}>
         <div className={styles.heading}>
           <div>
@@ -113,30 +74,23 @@ const SportmappPage = () => {
         </div>
         <div className={styles.content}>
           <div className={styles.category}>
-            <h2>Sports Providers • 5</h2>
+            <h2>Sports Providers • {sportsData.length}</h2>
           </div>
-          {sportsData.map((sport) => (
-            <div className={styles.category} key={sport.category}>
-              <h2>
-                {sport.category} • {sport.count}
-              </h2>
-              <div className={styles.boxes}>
-                {sport.providers.map((provider) => (
-                  <TagBox
-                    key={provider.name}
-                    onClick={() => onSelectProvider(provider)}
-                    title={provider.name}
-                    blueTag={`${provider.locations} locations`}
-                    redTag={`${provider.leagues} leagues`}
-                    greenTag={`${provider.teams} teams`}
-                    orangeTag={`${provider.players} players`}
-                    region={provider.region}
-                    sportIcon={provider.icon}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+          <div className={styles.boxes}>
+            {sportsData.map((provider) => (
+              <TagBox
+                key={provider?.category}
+                onClick={() => onSelectProvider(provider)}
+                title={provider?.name}
+                // blueTag={`${provider?.locations} locations`}
+                // redTag={`${provider?.leagues} leagues`}
+                // greenTag={`${provider?.teams} teams`}
+                // orangeTag={`${provider?.players} players`}
+                // region={provider?.region}
+                // sportIcon={provider?.icon}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </Layout>

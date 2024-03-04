@@ -3,19 +3,19 @@
   flex-direction: column;
   align-items: center;
   padding: 60px 20px;
-  height: 90vh;
 }
 
 .logoButton {
   background-color: #e0e0e0;
   border-radius: 50%;
-  min-width: 120px;
-  min-height: 120px;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   text-align: center;
 }
 

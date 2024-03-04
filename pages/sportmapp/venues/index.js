@@ -1,15 +1,15 @@
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import styles from './venues.module.scss';
-import TagBox from '../../../components/Common/TagBox';
 import Layout from '../../../components/Layout/LayoutWrapper';
 import Breadcrumbs from '../../../components/Sportsmapp/Breadcrumbs';
-import { useRouter } from 'next/router';
-import { useSportsmappContext } from '../../../context/SportsmappContext';
-import { useEffect, useState } from 'react';
 import BlueButton from '../../../components/Sportsmapp/BlueBtn';
 import GreenArrowButton from '../../../components/Sportsmapp/GreenArrowBtn';
+import TagBox from '../../../components/Common/TagBox';
 import VenuesModal from '../../../components/Sportsmapp/VenuesModal';
-import { fetchAllVenuesByProvider } from '../../../services';
+import { useRouter } from 'next/router';
+import { useSportsmappContext } from '../../../context/SportsmappContext';
+import { fetchAllVenuesByProvider, createVenue } from '../../../services';
+import styles from './venues.module.scss';
 
 const VenuesPage = () => {
   const router = useRouter();
@@ -21,22 +21,21 @@ const VenuesPage = () => {
     setShowModal(!showModal);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (selectedProvider) {
-          const venues = await fetchAllVenuesByProvider(1);
-          setVenuesData(venues);
-        }
-      } catch (error) {
-        console.error('Error fetching venues:', error);
+  const fetchVenues = async () => {
+    try {
+      if (selectedProvider) {
+        const venues = await fetchAllVenuesByProvider(selectedProvider.id);
+        setVenuesData(venues);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching venues:', error);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchVenues();
   }, [selectedProvider]);
 
-  // Clear venue to avoid breadcrumb issues
   useEffect(() => {
     selectVenue(null);
   }, []);
@@ -46,10 +45,20 @@ const VenuesPage = () => {
     router.push('/sportmapp/venues/leagues');
   };
 
+  const handleVenueCreated = async () => {
+    await fetchVenues(); // Refetch venues
+    toggleModal(); // Close modal
+  };
+
   return (
     <Layout>
       <div className={styles.dashboard}>
-        <VenuesModal showModal={showModal} toggleModal={toggleModal} />
+        <VenuesModal
+          showModal={showModal}
+          toggleModal={toggleModal}
+          selectedProvider={selectedProvider.id}
+          onVenueCreated={handleVenueCreated} // Pass the function to handle venue creation success
+        />
         <div className={styles.heading}>
           <div>
             <Image src="/assets/imgs/svgs/smLogo.svg" height={25} width={25} />
@@ -74,12 +83,6 @@ const VenuesPage = () => {
                 onClick={() => onSelectVenue(venue)}
                 title={venue.name}
                 blueTag={`${venue.sport_entity?.staff?.venue_managers?.length} VM's`}
-                greenTag={`${venue.sport_entity.name} leagues`}
-                redTag={`${venue.count_teams} teams`}
-                orangeTag={`${venue.count_players} players`}
-                // Assuming you have a mapping of sport icons based on sport names
-                sportIcon={`${venue.sport_entity.name.toLowerCase()}Icon.svg`}
-                sponsor={`${venue.sponsor_count} sponsored leagues`}
               />
             ))}
           </div>

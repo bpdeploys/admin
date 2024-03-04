@@ -19,7 +19,8 @@ import { fetchAllLeaguesByVenue } from '../../../../services';
 
 const LeaguesPage = () => {
   const router = useRouter();
-  const { selectLeague, selectedVenue } = useSportsmappContext();
+  const { selectLeague, selectedVenue, selectedProvider } =
+    useSportsmappContext();
   const [showModal, setShowModal] = useState(false);
   const [leaguesData, setLeaguesData] = useState([]); // State to store fetched leagues data
   const [showPitchesModal, setShowPitchesModal] = useState(false);
@@ -34,19 +35,19 @@ const LeaguesPage = () => {
   const toggleVenueManagersModal = () =>
     setShowVenueManagersModal(!showVenueManagersModal);
 
+  const fetchLeagues = async () => {
+    try {
+      const data = await fetchAllLeaguesByVenue(selectedVenue.id);
+      setLeaguesData(data); // Set fetched data to state
+    } catch (error) {
+      console.error('Error fetching leagues:', error);
+    }
+  };
+
   // Fetch leagues data when component mounts
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchAllLeaguesByVenue(selectedVenue.id);
-        setLeaguesData(data); // Set fetched data to state
-      } catch (error) {
-        console.error('Error fetching leagues:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
+    fetchLeagues();
+  }, [selectedVenue]);
 
   // Clear venue to avoid breadcrumb issues
   useEffect(() => {
@@ -78,10 +79,21 @@ const LeaguesPage = () => {
     },
   ];
 
+  const handleLeagueCreated = async () => {
+    await fetchLeagues(); // Refetch venues
+    toggleModal(); // Close modal
+  };
+
   return (
     <Layout>
       <div className={styles.dashboard}>
-        <LeaguesModal showModal={showModal} toggleModal={toggleModal} />
+        <LeaguesModal
+          showModal={showModal}
+          toggleModal={toggleModal}
+          onLeagueCreated={handleLeagueCreated}
+          selectedVenue={selectedVenue?.id}
+          selectedProvider={selectedProvider?.id}
+        />
         <PitchesModal
           showModal={showPitchesModal}
           toggleModal={togglePitchesModal}
@@ -89,6 +101,7 @@ const LeaguesPage = () => {
         <RefereesModal
           showModal={showRefereesModal}
           toggleModal={toggleRefereesModal}
+          selectedVenue={selectedVenue?.id}
         />
         <VenuesManagerModal
           showModal={showVenueManagersModal}

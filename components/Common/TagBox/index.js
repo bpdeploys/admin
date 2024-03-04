@@ -17,10 +17,10 @@ const TagBox = ({
     <div className={styles.box} onClick={onClick}>
       <h3>{title}</h3>
       <div className={styles.tags}>
-        <span className={styles.blueTag}>{blueTag}</span>
-        <span className={styles.greenTag}>{greenTag}</span>
-        <span className={styles.redTag}>{redTag}</span>
-        <span className={styles.orangeTag}>{orangeTag}</span>
+        {blueTag && <span className={styles.blueTag}>{blueTag}</span>}
+        {greenTag && <span className={styles.greenTag}>{greenTag}</span>}
+        {redTag && <span className={styles.redTag}>{redTag}</span>}
+        {orangeTag && <span className={styles.orangeTag}>{orangeTag}</span>}
       </div>
       <div className={styles.details}>
         <Image

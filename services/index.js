@@ -18,6 +18,15 @@ export const fetchAllLeaguesByVenue = async (selectedVenue) => {
   }
 };
 
+export const fetchAllProviders = async () => {
+  try {
+    const response = await api.get(`/sport-entities?filter_by=league_provider`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const fetchAllVenuesByProvider = async (selectedProvider) => {
   try {
     const token = localStorage.getItem('token');
@@ -73,6 +82,40 @@ export const createLeague = async (league) => {
   }
 };
 
+export const createProvider = async (provider) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+    const response = await api.post('/sport-entities/', provider, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the provider');
+  }
+};
+
+export const createVenue = async (venue) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+    const response = await api.post('/venues/', venue, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the venue');
+  }
+};
+
 export const fetchUserData = async () => {
   try {
     const token = localStorage.getItem('token');
@@ -110,9 +153,27 @@ export const createReferee = async (data) => {
   }
 };
 
-export const getReferees = async (credentials) => {
+export const updateReferee = async (id, data) => {
   try {
-    const response = await api.get('/referees/2', credentials);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.patch(`/referees/${id}`, data, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the referee');
+  }
+};
+
+export const getRefereesByVenue = async (venue) => {
+  try {
+    const response = await api.get(`/referees?venue=${venue}`);
     return response.data;
   } catch (error) {
     console.error(error);
