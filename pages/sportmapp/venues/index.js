@@ -24,7 +24,7 @@ const VenuesPage = () => {
   const fetchVenues = async () => {
     try {
       if (selectedProvider) {
-        const venues = await fetchAllVenuesByProvider(selectedProvider.id);
+        const venues = await fetchAllVenuesByProvider(selectedProvider?.id);
         setVenuesData(venues);
       }
     } catch (error) {
@@ -56,7 +56,7 @@ const VenuesPage = () => {
         <VenuesModal
           showModal={showModal}
           toggleModal={toggleModal}
-          selectedProvider={selectedProvider.id}
+          selectedProvider={selectedProvider?.id}
           onVenueCreated={handleVenueCreated} // Pass the function to handle venue creation success
         />
         <div className={styles.heading}>
@@ -79,7 +79,7 @@ const VenuesPage = () => {
           <div className={styles.boxes}>
             {venuesData.map((venue) => (
               <TagBox
-                key={venue.id}
+                key={venue?.id}
                 onClick={() => onSelectVenue(venue)}
                 title={venue.name}
                 blueTag={`${venue.sport_entity?.staff?.venue_managers?.length} VM's`}
