@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import styles from './editrefereemodal.module.scss';
+import styles from './editvmmodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { updateUser } from '../../../services';
 
-const EditRefereeModal = ({
+const EditVenueManagerModal = ({
   showModal,
   toggleModal,
-  selectedReferee,
-  onRefereeEdited,
+  selectedVm,
+  onVmEdited,
 }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
 
   useEffect(() => {
-    // Set initial values when selectedReferee changes
-    if (selectedReferee) {
-      setFirstName(selectedReferee.user.first_name);
-      setLastName(selectedReferee.user.last_name);
-      setPhoneNumber(selectedReferee.user.phone_number || '');
+    // Set initial values when selectedVm changes
+    if (selectedVm) {
+      setFirstName(selectedVm.user.first_name);
+      setLastName(selectedVm.user.last_name);
+      setPhoneNumber(selectedVm.user.phone_number || '');
     }
-  }, [selectedReferee]);
+  }, [selectedVm]);
 
-  const handleUpdateReferee = async () => {
+  const handleUpdateVenueManager = async () => {
     try {
-      await updateUser(selectedReferee.user.id, {
+      await updateUser(selectedVm.user.id, {
         first_name: firstName,
         last_name: lastName,
         phone_number: phoneNumber,
       });
-      alert('Referee updated successfully');
-      onRefereeEdited();
+      alert('Venue Manager updated successfully');
+      onVmEdited();
     } catch (error) {
-      alert('Error updating referee:', error);
+      alert('Error updating VenueManager:', error);
     }
   };
 
@@ -40,14 +40,14 @@ const EditRefereeModal = ({
     <TopModal
       show={showModal}
       modalClosed={toggleModal}
-      title="Edit Referee"
+      title="Edit Venue Manager"
       zIndex={200}
       width="30vw"
     >
       <div className={styles.container}>
         <input
           type="text"
-          placeholder="Referee First Name"
+          placeholder="First Name"
           className={styles.inputField}
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
@@ -66,12 +66,15 @@ const EditRefereeModal = ({
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
-        <button className={styles.submitButton} onClick={handleUpdateReferee}>
-          Update Referee
+        <button
+          className={styles.submitButton}
+          onClick={handleUpdateVenueManager}
+        >
+          Update VM
         </button>
       </div>
     </TopModal>
   );
 };
 
-export default EditRefereeModal;
+export default EditVenueManagerModal;

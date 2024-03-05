@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from './sidebar.module.scss'; // Import the CSS module for the sidebar
+import styles from './sidebar.module.scss';
 import { useAuth } from '../../../context/useAuth';
 
 const Sidebar = () => {

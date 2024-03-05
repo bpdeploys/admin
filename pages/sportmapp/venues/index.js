@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useSportsmappContext } from '../../../context/SportsmappContext';
 import { fetchAllVenuesByProvider, createVenue } from '../../../services';
 import styles from './venues.module.scss';
+import withAuth from '../../../hoc/withAuth';
 
 const VenuesPage = () => {
   const router = useRouter();
@@ -92,4 +93,4 @@ const VenuesPage = () => {
   );
 };
 
-export default VenuesPage;
+export default withAuth(VenuesPage);

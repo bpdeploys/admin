@@ -10,6 +10,7 @@ import { useSportsmappContext } from '../../context/SportsmappContext';
 import { useRouter } from 'next/router';
 import { fetchAllProviders } from '../../services';
 import styles from './sportmapp.module.scss';
+import withAuth from '../../hoc/withAuth';
 
 const SportmappPage = () => {
   const router = useRouter();
@@ -97,4 +98,4 @@ const SportmappPage = () => {
   );
 };
 
-export default SportmappPage;
+export default withAuth(SportmappPage);

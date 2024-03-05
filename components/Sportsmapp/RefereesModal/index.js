@@ -7,35 +7,35 @@ import CreateRefereeModal from '../CreateRefereeModal';
 import { getRefereesByVenue } from '../../../services';
 import EditRefereeModal from '../EditRefereeModal';
 
-const RefereesModal = ({ showModal, toggleModal, selectedVenue }) => {
+const RefereesModal = ({
+  showModal,
+  toggleModal,
+  selectedVenue,
+  refereesData,
+  refetchReferees,
+}) => {
   const [showCreationModal, setShowCreationModal] = useState(false);
   const [selectedReferee, setSelectedReferee] = useState(null);
-  const [refereesData, setRefereesData] = useState([]);
 
   const toggleCreationModal = () => {
     setShowCreationModal(!showCreationModal);
   };
 
-  useEffect(() => {
-    const fetchReferees = async () => {
-      try {
-        const data = await getRefereesByVenue(selectedVenue);
-        setRefereesData(data.results);
-      } catch (error) {
-        console.error('Error fetching referees:', error);
-      }
-    };
+  const handleRefereeCreate = () => {
+    refetchReferees();
+    toggleCreationModal();
+  };
 
-    if (showModal) {
-      fetchReferees();
-    }
-  }, [showModal, selectedVenue]);
+  const handleRefereeEdit = () => {
+    refetchReferees();
+    setSelectedReferee(null);
+  };
 
   return (
     <Modal
       show={showModal}
       modalClosed={toggleModal}
-      title={`${refereesData.length} REFEREES`}
+      title={`${refereesData?.length || 0} REFEREES`}
       width="50%"
       hideActions={showCreationModal || selectedReferee}
     >
@@ -45,6 +45,7 @@ const RefereesModal = ({ showModal, toggleModal, selectedVenue }) => {
             showModal={showCreationModal}
             toggleModal={toggleCreationModal}
             selectedVenue={selectedVenue}
+            onRefereeCreated={handleRefereeCreate}
           />
         )}
         {selectedReferee && (
@@ -52,6 +53,7 @@ const RefereesModal = ({ showModal, toggleModal, selectedVenue }) => {
             showModal={true}
             toggleModal={() => setSelectedReferee(null)}
             selectedReferee={selectedReferee}
+            onRefereeEdited={handleRefereeEdit}
           />
         )}
         <GreenArrowButton
@@ -59,14 +61,15 @@ const RefereesModal = ({ showModal, toggleModal, selectedVenue }) => {
           onClick={() => toggleCreationModal()}
         />
         <div className={styles.boxes}>
-          {refereesData.map((referee, index) => (
-            <ButtonBox
-              key={index}
-              title={`${referee.user.first_name} ${referee.user.last_name}`}
-              action="Edit"
-              onClick={() => setSelectedReferee(referee)}
-            />
-          ))}
+          {refereesData &&
+            refereesData.map((referee, index) => (
+              <ButtonBox
+                key={index}
+                title={`${referee.user.first_name} ${referee.user.last_name}`}
+                action="Edit"
+                onClick={() => setSelectedReferee(referee)}
+              />
+            ))}
         </div>
       </div>
     </Modal>

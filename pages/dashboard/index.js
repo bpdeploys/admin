@@ -1,5 +1,6 @@
 import DashboardBox from '../../components/DashboardBox';
 import Layout from '../../components/Layout/LayoutWrapper';
+import withAuth from '../../hoc/withAuth';
 import styles from './dashboard.module.scss';
 
 const dashboardItems = [
@@ -60,4 +61,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default withAuth(DashboardPage);

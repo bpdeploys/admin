@@ -15,14 +15,23 @@ import PitchesModal from '../../../../components/Sportsmapp/PitchesModal';
 import RefereesModal from '../../../../components/Sportsmapp/RefereesModal';
 import VenuesManagerModal from '../../../../components/Sportsmapp/VenueManagerModal';
 import LeaguesModal from '../../../../components/Sportsmapp/LeaguesModal';
-import { fetchAllLeaguesByVenue } from '../../../../services';
+import {
+  fetchAllLeaguesByVenue,
+  getPitchesByVenue,
+  getRefereesByVenue,
+  getVenueManagersByVenue,
+} from '../../../../services';
+import withAuth from '../../../../hoc/withAuth';
 
 const LeaguesPage = () => {
   const router = useRouter();
   const { selectLeague, selectedVenue, selectedProvider } =
     useSportsmappContext();
   const [showModal, setShowModal] = useState(false);
-  const [leaguesData, setLeaguesData] = useState([]); // State to store fetched leagues data
+  const [leaguesData, setLeaguesData] = useState([]);
+  const [refereesData, setRefereesData] = useState([]);
+  const [pitchesData, setPitchesData] = useState([]);
+  const [vmsData, setVmsData] = useState([]);
   const [showPitchesModal, setShowPitchesModal] = useState(false);
   const [showRefereesModal, setShowRefereesModal] = useState(false);
   const [showVenueManagersModal, setShowVenueManagersModal] = useState(false);
@@ -44,9 +53,39 @@ const LeaguesPage = () => {
     }
   };
 
+  const fetchPitches = async () => {
+    try {
+      const data = await getPitchesByVenue(selectedVenue.id);
+      setPitchesData(data);
+    } catch (error) {
+      console.error('Error fetching pitches:', error);
+    }
+  };
+
+  const fetchReferees = async () => {
+    try {
+      const data = await getRefereesByVenue(selectedVenue.id);
+      setRefereesData(data.results);
+    } catch (error) {
+      console.error('Error fetching referees:', error);
+    }
+  };
+
+  const fetchVms = async () => {
+    try {
+      const data = await getVenueManagersByVenue(selectedVenue.id);
+      setVmsData(data);
+    } catch (error) {
+      console.error('Error fetching venue managers:', error);
+    }
+  };
+
   // Fetch leagues data when component mounts
   useEffect(() => {
     fetchLeagues();
+    fetchPitches();
+    fetchReferees();
+    fetchVms();
   }, [selectedVenue]);
 
   // Clear venue to avoid breadcrumb issues
@@ -61,13 +100,13 @@ const LeaguesPage = () => {
   const buttonBoxesData = [
     {
       title: 'Pitches',
-      quantity: 4,
+      quantity: pitchesData?.length || 0,
       action: 'View Pitches',
       onClick: togglePitchesModal,
     },
     {
       title: 'Referees',
-      quantity: 5,
+      quantity: refereesData?.length || 0,
       action: 'View Referees',
       onClick: toggleRefereesModal,
     },
@@ -80,8 +119,20 @@ const LeaguesPage = () => {
   ];
 
   const handleLeagueCreated = async () => {
-    await fetchLeagues(); // Refetch venues
-    toggleModal(); // Close modal
+    await fetchLeagues();
+    toggleModal();
+  };
+
+  const handlePitchRefetch = async () => {
+    await fetchPitches();
+  };
+
+  const handleRefereeRefetch = async () => {
+    await fetchReferees();
+  };
+
+  const handleVmRefetch = async () => {
+    await fetchVms();
   };
 
   return (
@@ -97,15 +148,23 @@ const LeaguesPage = () => {
         <PitchesModal
           showModal={showPitchesModal}
           toggleModal={togglePitchesModal}
+          selectedVenue={selectedVenue?.id}
+          pitchesData={pitchesData}
+          refetchPitches={handlePitchRefetch}
         />
         <RefereesModal
           showModal={showRefereesModal}
           toggleModal={toggleRefereesModal}
           selectedVenue={selectedVenue?.id}
+          refereesData={refereesData}
+          refetchReferees={handleRefereeRefetch}
         />
         <VenuesManagerModal
           showModal={showVenueManagersModal}
           toggleModal={toggleVenueManagersModal}
+          selectedVenue={selectedVenue?.id}
+          vmsData={vmsData}
+          refetchVms={handleVmRefetch}
         />
         <div className={styles.heading}>
           <div>
@@ -137,7 +196,6 @@ const LeaguesPage = () => {
           </div>
           <div className={styles.boxes}>
             {leaguesData.map((league) => {
-              // Calculate total number of players for this league
               const totalPlayers = league.teams_in_league.reduce(
                 (total, teamData) => {
                   return total + teamData.team.number_of_players;
@@ -147,7 +205,7 @@ const LeaguesPage = () => {
 
               return (
                 <LeagueBox
-                  key={league.id} // Use a unique identifier for the key
+                  key={league.id}
                   onClick={() => onSelectLeague(league)}
                   title={league.league_name}
                   blueTag={`${league.number_of_teams} teams`}
@@ -167,4 +225,4 @@ const LeaguesPage = () => {
   );
 };
 
-export default LeaguesPage;
+export default withAuth(LeaguesPage);

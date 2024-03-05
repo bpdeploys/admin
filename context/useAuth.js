@@ -61,12 +61,28 @@ export const AuthProvider = ({ children }) => {
     Router.push('/');
   };
 
+  const protectRoute = (Component) => {
+    return () => {
+      if (
+        !userInfo &&
+        Router.pathname !== '/' &&
+        Router.pathname !== '/login'
+      ) {
+        Router.push('/'); // Redirect to index
+        alert('Please login first');
+        return null;
+      }
+      return <Component />;
+    };
+  };
+
   const contextValue = {
     userInfo,
     isLoading,
     login,
     logout,
     refreshAuth,
+    protectRoute,
   };
 
   return (

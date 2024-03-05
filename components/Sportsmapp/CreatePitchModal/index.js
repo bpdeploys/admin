@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import Modal from '../../Common/Modal';
 import styles from './createpitchmodal.module.scss';
 import TopModal from '../../Common/TopModal';
+import { createPitch } from '../../../services';
 
-const CreatePitchModal = ({ showModal, toggleModal }) => {
+const CreatePitchModal = ({
+  showModal,
+  toggleModal,
+  selectedVenue,
+  onPitchCreated,
+}) => {
+  const [name, setName] = useState('');
+  const [format, setFormat] = useState('');
+  const [surface, setSurface] = useState('');
   const [logo, setLogo] = useState(null);
 
   const handleLogoUpload = (event) => {
@@ -14,6 +22,21 @@ const CreatePitchModal = ({ showModal, toggleModal }) => {
         setLogo(e.target.result);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCreatePitch = async () => {
+    try {
+      await createPitch({
+        name,
+        format_pitch: format,
+        surface,
+        venue: selectedVenue,
+      });
+      alert('Pitch created successfully');
+      onPitchCreated();
+    } catch (error) {
+      alert('Error creating pitch:', error);
     }
   };
 
@@ -44,18 +67,26 @@ const CreatePitchModal = ({ showModal, toggleModal }) => {
           type="text"
           placeholder="Name of the Pitch"
           className={styles.inputField}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <input
           type="text"
           placeholder="Pitch format"
           className={styles.inputField}
+          value={format}
+          onChange={(e) => setFormat(e.target.value)}
         />
         <input
           type="text"
           placeholder="What is the surface?"
           className={styles.inputField}
+          value={surface}
+          onChange={(e) => setSurface(e.target.value)}
         />
-        <button className={styles.submitButton}>Create Pitch</button>
+        <button className={styles.submitButton} onClick={handleCreatePitch}>
+          Create Pitch
+        </button>
       </div>
     </TopModal>
   );

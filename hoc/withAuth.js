@@ -1,38 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getUserToken } from '../utils';
-
-function isTokenExpired(token) {
-  try {
-    const payloadBase64 = token.split('.')[1];
-    const decodedJson = atob(payloadBase64);
-    const decodedToken = JSON.parse(decodedJson);
-
-    const currentTime = Math.floor(Date.now() / 1000);
-    const expTime = decodedToken.exp;
-
-    return currentTime > expTime;
-  } catch (error) {
-    console.error('Error decoding the token:', error);
-    return true; // Assume token is invalid/expired on error
-  }
-}
+import { useAuth } from '../context/useAuth'; // Adjust the path if necessary
 
 const withAuth = (WrappedComponent) => {
   return (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const { userInfo, refreshAuth } = useAuth();
 
     useEffect(() => {
       const checkAuth = async () => {
-        const token = getUserToken();
-        const accessKey = router.query.accessKey;
+        if (!userInfo) {
+          try {
+            await refreshAuth(); // Use your context to refresh status
+          } catch (error) {
+            console.error('Error refreshing authentication:', error);
+          }
+        }
 
-        if (
-          accessKey === 'test_key' ||
-          (!isTokenExpired(getUserToken()) && getUserToken())
-        ) {
-          // Redirect to login with a state or query param to show a message
+        if (!userInfo) {
+          // Check if still not logged in
           router.push('/login?session_expired=true');
         } else {
           setIsLoading(false);
@@ -40,10 +27,10 @@ const withAuth = (WrappedComponent) => {
       };
 
       checkAuth();
-    }, [router]);
+    }, [router, userInfo, refreshAuth]);
 
     if (isLoading) {
-      return <div>Loading...</div>;
+      return <div>Checking authentication...</div>; // Enhanced loading UX
     }
 
     return <WrappedComponent {...props} />;

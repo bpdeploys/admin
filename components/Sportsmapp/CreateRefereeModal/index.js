@@ -3,7 +3,7 @@ import styles from './createrefereemodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { createReferee } from '../../../services';
 
-const CreateRefereeModal = ({ showModal, toggleModal, selectedVenue }) => {
+const CreateRefereeModal = ({ showModal, toggleModal, selectedVenue, onRefereeCreated}) => {
   const [logo, setLogo] = useState(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -44,7 +44,7 @@ const CreateRefereeModal = ({ showModal, toggleModal, selectedVenue }) => {
         venue: selectedVenue,
       });
       alert('Referee created successfully');
-      toggleModal();
+      onRefereeCreated();
     } catch (error) {
       alert('Error creating referee:', error);
     }

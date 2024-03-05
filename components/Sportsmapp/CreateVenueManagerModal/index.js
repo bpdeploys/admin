@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import styles from './createvenuemanagermodal.module.scss';
 import TopModal from '../../Common/TopModal';
+import { createVenueManager } from '../../../services';
 
-const CreateVenueManagerModal = ({ showModal, toggleModal }) => {
+const CreateVenueManagerModal = ({
+  showModal,
+  toggleModal,
+  selectedVenue,
+  onVmCreated,
+}) => {
   const [logo, setLogo] = useState(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
@@ -13,6 +22,36 @@ const CreateVenueManagerModal = ({ showModal, toggleModal }) => {
         setLogo(e.target.result);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const generateRandomPassword = () => {
+    return Math.random().toString(36).slice(-8);
+  };
+
+  const generateRandomEmail = (firstName, lastName) => {
+    const randomNumbers = Math.floor(10 + Math.random() * 90);
+    return `${firstName.toLowerCase()}${lastName.toLowerCase()}vm${randomNumbers}@bp.com`;
+  };
+
+  const handleCreateVenueManager = async () => {
+    const password = generateRandomPassword();
+    const email = generateRandomEmail(firstName, lastName);
+
+    try {
+      await createVenueManager({
+        email,
+        password,
+        first_name: firstName,
+        last_name: lastName,
+        phone_number: phoneNumber,
+        type: 'R',
+        venue: selectedVenue,
+      });
+      alert('VenueManager created successfully');
+      onVmCreated();
+    } catch (error) {
+      alert('Error creating VenueManager:', error);
     }
   };
 
@@ -43,18 +82,29 @@ const CreateVenueManagerModal = ({ showModal, toggleModal }) => {
           type="text"
           placeholder="First Name"
           className={styles.inputField}
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
         />
         <input
           type="text"
           placeholder="Last Name"
           className={styles.inputField}
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
         />
         <input
           type="text"
           placeholder="Phone Number"
           className={styles.inputField}
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
-        <button className={styles.submitButton}>Create VM</button>
+        <button
+          className={styles.submitButton}
+          onClick={handleCreateVenueManager}
+        >
+          Create VM
+        </button>
       </div>
     </TopModal>
   );

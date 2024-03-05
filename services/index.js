@@ -145,7 +145,7 @@ export const loginRequest = async (credentials) => {
 
 export const createReferee = async (data) => {
   try {
-    const response = await api.post('/register/', data);
+    const response = await api.post('/referees/', data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -153,7 +153,7 @@ export const createReferee = async (data) => {
   }
 };
 
-export const updateReferee = async (id, data) => {
+export const updateUser = async (id, data) => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -163,11 +163,11 @@ export const updateReferee = async (id, data) => {
       Authorization: `Token ${token}`,
     };
 
-    const response = await api.patch(`/referees/${id}`, data, { headers });
+    const response = await api.patch(`/users/${id}`, data, { headers });
     return response.data;
   } catch (error) {
     console.error(error);
-    throw new Error('An error occurred while creating the referee');
+    throw new Error('An error occurred while creating the user');
   }
 };
 
@@ -177,6 +177,80 @@ export const getRefereesByVenue = async (venue) => {
     return response.data;
   } catch (error) {
     console.error(error);
-    throw new Error('An error occurred while logging in');
+    throw new Error('An error occurred while getting referees');
+  }
+};
+
+export const createPitch = async (data) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.post('/pitches/', data, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the Pitch');
+  }
+};
+
+export const updatePitch = async (data) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.post('/pitches/', data, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the Pitch');
+  }
+};
+
+export const getPitchesByVenue = async (venue) => {
+  try {
+    const response = await api.get(`/pitches?venue_id=${venue}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while getting pitches');
+  }
+};
+
+export const createVenueManager = async (data) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.post('/venue-managers/', data, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the Venue Manager');
+  }
+};
+
+export const getVenueManagersByVenue = async (venue) => {
+  try {
+    const response = await api.get(`/venue-managers?venue_id=${venue}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while getting VMs');
   }
 };

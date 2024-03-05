@@ -1,6 +1,6 @@
 import Header from '../Header';
 import Sidebar from '../Sidebar';
-import styles from './layout.module.scss'; // Import the CSS module for the layout
+import styles from './layout.module.scss';
 
 const Layout = ({ children }) => {
   return (

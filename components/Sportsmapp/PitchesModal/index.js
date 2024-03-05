@@ -1,62 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '../../Common/Modal';
 import styles from './pitchesmodal.module.scss';
 import GreenArrowButton from '../GreenArrowBtn';
 import ButtonBox from '../../Common/ButtonBox';
 import CreatePitchModal from '../CreatePitchModal';
-import TopModal from '../../Common/TopModal';
+import { getPitchesByVenue } from '../../../services';
+import EditPitchModal from '../EditPitchModal';
 
-const PitchesModal = ({ showModal, toggleModal }) => {
+const PitchesModal = ({
+  showModal,
+  toggleModal,
+  selectedVenue,
+  pitchesData,
+  refetchPitches,
+}) => {
   const [showCreationModal, setShowCreationModal] = useState(false);
+  const [selectedPitch, setSelectedPitch] = useState(null);
 
   const toggleCreationModal = () => {
     setShowCreationModal(!showCreationModal);
   };
 
-  const pitchBoxesData = [
-    {
-      name: 'Emirates',
-      pitchType: '7-aside',
-      surfaceType: '',
-      action: 'Edit',
-      onClick: () => {},
-    },
-    {
-      name: 'Bernabeu',
-      pitchType: '6-aside',
-      surfaceType: '4G',
-      action: 'Edit',
-      onClick: () => {},
-    },
-    {
-      name: 'Etihad',
-      pitchType: '6-aside',
-      surfaceType: '3G',
-      action: 'Edit',
-      onClick: () => {},
-    },
-    {
-      name: 'Anfield',
-      pitchType: '5-aside',
-      surfaceType: '',
-      action: 'Edit',
-      onClick: () => {},
-    },
-  ];
+  const handlePitchCreate = () => {
+    refetchPitches();
+    toggleCreationModal();
+  };
+
+  const handlePitchEdit = () => {
+    refetchPitches();
+    toggleCreationModal();
+    setSelectedPitch(null);
+  };
 
   return (
     <Modal
       show={showModal}
       modalClosed={toggleModal}
-      title="4 PITCHES"
+      title={`${pitchesData?.length || 0} PITCHES`}
       width="50%"
-      hideActions={showCreationModal}
+      hideActions={showCreationModal || selectedPitch}
     >
       <div className={styles.container}>
         {showCreationModal && (
           <CreatePitchModal
             showModal={showCreationModal}
             toggleModal={toggleCreationModal}
+            selectedVenue={selectedVenue}
+            onPitchCreated={handlePitchCreate}
+          />
+        )}
+        {selectedPitch && (
+          <EditPitchModal
+            showModal={true}
+            toggleModal={() => setSelectedPitch(null)}
+            selectedPitch={selectedPitch}
+            onPitchEdited={handlePitchEdit}
           />
         )}
         <GreenArrowButton
@@ -64,14 +62,15 @@ const PitchesModal = ({ showModal, toggleModal }) => {
           onClick={() => toggleCreationModal()}
         />
         <div className={styles.boxes}>
-          {pitchBoxesData.map((box, index) => (
-            <ButtonBox
-              key={index}
-              title={box.name}
-              action={box.action}
-              onClick={box.onClick}
-            />
-          ))}
+          {pitchesData &&
+            pitchesData.map((pitch, index) => (
+              <ButtonBox
+                key={index}
+                title={pitch.name}
+                action="Edit"
+                onClick={() => setSelectedPitch(pitch)}
+              />
+            ))}
         </div>
       </div>
     </Modal>

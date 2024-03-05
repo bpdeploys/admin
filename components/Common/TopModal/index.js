@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import styles from './modal.module.scss'; // Import the SCSS module
+import styles from './modal.module.scss';
 import Backdrop from '../Backdrop';
 import Image from 'next/image';
 
