@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './editpitchmodal.module.scss';
 import TopModal from '../../Common/TopModal';
-import { updateUser } from '../../../services';
+import { updatePitch } from '../../../services';
 
 const EditPitchModal = ({
   showModal,
@@ -26,7 +26,7 @@ const EditPitchModal = ({
 
   const handleUpdatePitch = async () => {
     try {
-      await updateUser(selectedPitch.user.id, {
+      await updatePitch(selectedPitch.id, {
         name,
         format,
         surface,
@@ -34,7 +34,7 @@ const EditPitchModal = ({
       alert('Pitch updated successfully');
       onPitchEdited();
     } catch (error) {
-      alert('Error updating Pitch:', error);
+      console.log(error);
     }
   };
 

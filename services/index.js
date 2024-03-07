@@ -145,7 +145,15 @@ export const loginRequest = async (credentials) => {
 
 export const createReferee = async (data) => {
   try {
-    const response = await api.post('/referees/', data);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.post('/referees/', data, { headers });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -199,7 +207,7 @@ export const createPitch = async (data) => {
   }
 };
 
-export const updatePitch = async (data) => {
+export const updatePitch = async (id, data) => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -209,10 +217,10 @@ export const updatePitch = async (data) => {
       Authorization: `Token ${token}`,
     };
 
-    const response = await api.post('/pitches/', data, { headers });
+    const response = await api.patch(`/pitches/${id}`, data, { headers });
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
     throw new Error('An error occurred while creating the Pitch');
   }
 };

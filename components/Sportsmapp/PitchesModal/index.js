@@ -28,7 +28,6 @@ const PitchesModal = ({
 
   const handlePitchEdit = () => {
     refetchPitches();
-    toggleCreationModal();
     setSelectedPitch(null);
   };
 

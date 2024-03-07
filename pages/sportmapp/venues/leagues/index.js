@@ -112,7 +112,7 @@ const LeaguesPage = () => {
     },
     {
       title: 'Venue Managers',
-      quantity: 4,
+      quantity: vmsData?.length || 0,
       action: "View VM's",
       onClick: toggleVenueManagersModal,
     },

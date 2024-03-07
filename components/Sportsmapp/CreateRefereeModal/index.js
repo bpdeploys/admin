@@ -3,7 +3,12 @@ import styles from './createrefereemodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { createReferee } from '../../../services';
 
-const CreateRefereeModal = ({ showModal, toggleModal, selectedVenue, onRefereeCreated}) => {
+const CreateRefereeModal = ({
+  showModal,
+  toggleModal,
+  selectedVenue,
+  onRefereeCreated,
+}) => {
   const [logo, setLogo] = useState(null);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -36,7 +41,6 @@ const CreateRefereeModal = ({ showModal, toggleModal, selectedVenue, onRefereeCr
     try {
       await createReferee({
         email,
-        password,
         first_name: firstName,
         last_name: lastName,
         phone_number: phoneNumber,
