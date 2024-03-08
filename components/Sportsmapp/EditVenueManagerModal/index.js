@@ -3,6 +3,15 @@ import styles from './editvmmodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { updateUser } from '../../../services';
 
+/**
+ * EditVenueManagerModal component for editing venue manager details.
+ *
+ * @param {Object} showModal - Boolean to show or hide the modal
+ * @param {Function} toggleModal - Function to toggle the modal visibility
+ * @param {String} selectedVm - The selected venue manager object
+ * @param {Function} onVmEdited - Function to handle the venue manager edited event
+ * @return {JSX.Element} The modal component for editing venue manager details
+ */
 const EditVenueManagerModal = ({
   showModal,
   toggleModal,
@@ -32,7 +41,7 @@ const EditVenueManagerModal = ({
       alert('Venue Manager updated successfully');
       onVmEdited();
     } catch (error) {
-      alert('Error updating VenueManager:', error);
+      alert('Error updating VenueManager');
     }
   };
 

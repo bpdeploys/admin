@@ -235,6 +235,28 @@ export const getPitchesByVenue = async (venue) => {
   }
 };
 
+export const getPitchesByVenueAndFormat = async (venue, format) => {
+  try {
+    const response = await api.get(`/pitches?venue_id=1&format=${format}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while getting pitches');
+  }
+};
+
+export const getMatchesByLeague = async (league) => {
+  try {
+    const response = await api.get(
+      `/matches?search=true&incomplete=true&league=${league}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while getting matches');
+  }
+};
+
 export const createVenueManager = async (data) => {
   try {
     const token = localStorage.getItem('token');
@@ -260,5 +282,51 @@ export const getVenueManagersByVenue = async (venue) => {
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while getting VMs');
+  }
+};
+
+export const createMatch = async (data) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.post('/matches/', data, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the match');
+  }
+};
+
+export const createTeam = async (data) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.post('/teams/', data, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the team');
+  }
+};
+
+export const getTeamsByLeague = async (league) => {
+  try {
+    const response = await api.get(`/leagues/${league}/teams/`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while getting teams data');
   }
 };

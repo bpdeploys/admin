@@ -79,3 +79,20 @@ export function pickTextColorBasedOnBgColorAdvanced(
   var L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
   return L > 0.179 ? darkColor : lightColor;
 }
+
+export function convertFormat(format) {
+  // Use a regular expression to match the [number]v[number] pattern
+  const regex = /(\d+)v(\d+)/i;
+
+  // Check if the format matches the pattern
+  const match = format.match(regex);
+
+  // If there's a match and both numbers are the same (e.g., 7v7, 11v11)
+  if (match && match[1] === match[2]) {
+    // Return the converted format (e.g., "7-a-side")
+    return `${match[1]} a side`;
+  }
+
+  // If the format doesn't match the pattern or numbers are different, return the original format
+  return format;
+}

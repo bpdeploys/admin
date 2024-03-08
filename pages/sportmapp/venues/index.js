@@ -11,25 +11,31 @@ import { useSportsmappContext } from '../../../context/SportsmappContext';
 import { fetchAllVenuesByProvider, createVenue } from '../../../services';
 import styles from './venues.module.scss';
 import withAuth from '../../../hoc/withAuth';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Loading from '../../../components/Common/Loading';
 
 const VenuesPage = () => {
   const router = useRouter();
   const { selectedProvider, selectVenue } = useSportsmappContext();
   const [venuesData, setVenuesData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
   const fetchVenues = async () => {
+    startLoading();
     try {
       if (selectedProvider) {
         const venues = await fetchAllVenuesByProvider(selectedProvider?.id);
         setVenuesData(venues);
       }
     } catch (error) {
-      console.error('Error fetching venues:', error);
+      console.error('Error fetching venues');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -74,23 +80,31 @@ const VenuesPage = () => {
           </div>
         </div>
         <div className={styles.content}>
-          <div className={styles.category}>
-            <h2>Venues • {venuesData.length}</h2>
-          </div>
-          <div className={styles.boxes}>
-            {venuesData.map((venue) => (
-              <TagBox
-                key={venue?.id}
-                onClick={() => onSelectVenue(venue)}
-                title={venue.name}
-                blueTag={`${venue.sport_entity?.staff?.venue_managers?.length} VM's`}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className={styles.loadingWrapper}>
+              <Loading />
+            </div>
+          ) : (
+            <>
+              <div className={styles.category}>
+                <h2>Venues • {venuesData.length}</h2>
+              </div>
+              <div className={styles.boxes}>
+                {venuesData.map((venue) => (
+                  <TagBox
+                    key={venue?.id}
+                    onClick={() => onSelectVenue(venue)}
+                    title={venue.name}
+                    blueTag={`${venue.sport_entity?.staff?.venue_managers?.length} VM's`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Layout>
   );
 };
 
-export default withAuth(VenuesPage);
+export default VenuesPage;

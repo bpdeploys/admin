@@ -14,7 +14,7 @@ const ButtonBox = ({ onClick, title, quantity, action }) => {
           </div>
         )}
       </div>
-      <button className={styles.action}>{action}</button>
+      {action && <button className={styles.action}>{action}</button>}
     </div>
   );
 };

@@ -51,7 +51,7 @@ const CreateVenueManagerModal = ({
       alert('VenueManager created successfully');
       onVmCreated();
     } catch (error) {
-      alert('Error creating VenueManager:', error);
+      alert('Error creating VenueManager');
     }
   };
 

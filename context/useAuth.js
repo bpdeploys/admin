@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         const data = await fetchUserData(token);
         setUserInfo(data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching user data');
         window.localStorage.removeItem('token');
         setUserInfo(null);
       } finally {
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
         console.error('Login failed');
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error');
     } finally {
       setIsLoading(false);
     }

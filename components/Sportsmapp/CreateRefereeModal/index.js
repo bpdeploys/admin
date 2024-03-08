@@ -50,7 +50,7 @@ const CreateRefereeModal = ({
       alert('Referee created successfully');
       onRefereeCreated();
     } catch (error) {
-      alert('Error creating referee:', error);
+      alert('Error creating referee');
     }
   };
 

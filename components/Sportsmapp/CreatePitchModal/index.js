@@ -36,7 +36,7 @@ const CreatePitchModal = ({
       alert('Pitch created successfully');
       onPitchCreated();
     } catch (error) {
-      alert('Error creating pitch:', error);
+      alert('Error creating pitch');
     }
   };
 

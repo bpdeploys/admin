@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import BlueButton from '../../../../components/Sportsmapp/BlueBtn';
 import GreenArrowButton from '../../../../components/Sportsmapp/GreenArrowBtn';
 import VenuesModal from '../../../../components/Sportsmapp/VenuesModal';
-import LeagueBox from '../../../../components/Common/LeagueBox';
+import LeagueBox from '../../../../components/Sportsmapp/LeagueBox';
 import ButtonBox from '../../../../components/Common/ButtonBox';
 import PitchesModal from '../../../../components/Sportsmapp/PitchesModal';
 import RefereesModal from '../../../../components/Sportsmapp/RefereesModal';
@@ -22,6 +22,7 @@ import {
   getVenueManagersByVenue,
 } from '../../../../services';
 import withAuth from '../../../../hoc/withAuth';
+import Loading from '../../../../components/Common/Loading';
 
 const LeaguesPage = () => {
   const router = useRouter();
@@ -36,6 +37,14 @@ const LeaguesPage = () => {
   const [showRefereesModal, setShowRefereesModal] = useState(false);
   const [showVenueManagersModal, setShowVenueManagersModal] = useState(false);
 
+  const [loadingLeagues, setLoadingLeagues] = useState(false);
+  const [loadingPitches, setLoadingPitches] = useState(false);
+  const [loadingReferees, setLoadingReferees] = useState(false);
+  const [loadingVms, setLoadingVms] = useState(false);
+
+  const isLoading =
+    loadingLeagues || loadingPitches || loadingReferees || loadingVms;
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -45,38 +54,50 @@ const LeaguesPage = () => {
     setShowVenueManagersModal(!showVenueManagersModal);
 
   const fetchLeagues = async () => {
+    setLoadingLeagues(true);
     try {
       const data = await fetchAllLeaguesByVenue(selectedVenue.id);
-      setLeaguesData(data); // Set fetched data to state
+      setLeaguesData(data);
     } catch (error) {
-      console.error('Error fetching leagues:', error);
+      console.error('Error fetching leagues', error);
+    } finally {
+      setLoadingLeagues(false);
     }
   };
 
   const fetchPitches = async () => {
+    setLoadingPitches(true);
     try {
       const data = await getPitchesByVenue(selectedVenue.id);
       setPitchesData(data);
     } catch (error) {
-      console.error('Error fetching pitches:', error);
+      console.error('Error fetching pitches', error);
+    } finally {
+      setLoadingPitches(false);
     }
   };
 
   const fetchReferees = async () => {
+    setLoadingReferees(true);
     try {
       const data = await getRefereesByVenue(selectedVenue.id);
-      setRefereesData(data.results);
+      setRefereesData(data.results); // Assuming the results are nested
     } catch (error) {
-      console.error('Error fetching referees:', error);
+      console.error('Error fetching referees', error);
+    } finally {
+      setLoadingReferees(false);
     }
   };
 
   const fetchVms = async () => {
+    setLoadingVms(true);
     try {
       const data = await getVenueManagersByVenue(selectedVenue.id);
       setVmsData(data);
     } catch (error) {
-      console.error('Error fetching venue managers:', error);
+      console.error('Error fetching venue managers', error);
+    } finally {
+      setLoadingVms(false);
     }
   };
 
@@ -95,6 +116,7 @@ const LeaguesPage = () => {
 
   const onSelectLeague = (provider) => {
     selectLeague(provider);
+    router.push('/sportmapp/venues/leagues/matches');
   };
 
   const buttonBoxesData = [
@@ -179,50 +201,58 @@ const LeaguesPage = () => {
           </div>
         </div>
         <div className={styles.content}>
-          <div className={styles.category} />
-          <div className={styles.boxes}>
-            {buttonBoxesData.map((box, index) => (
-              <ButtonBox
-                key={index}
-                title={box.title}
-                quantity={box.quantity}
-                action={box.action}
-                onClick={box.onClick}
-              />
-            ))}
-          </div>
-          <div className={styles.category}>
-            <h2>Leagues • {leaguesData.length}</h2>
-          </div>
-          <div className={styles.boxes}>
-            {leaguesData.map((league) => {
-              const totalPlayers = league.teams_in_league.reduce(
-                (total, teamData) => {
-                  return total + teamData.team.number_of_players;
-                },
-                0
-              );
+          {isLoading ? (
+            <div className={styles.loadingWrapper}>
+              <Loading />
+            </div>
+          ) : (
+            <>
+              <div className={styles.category} />
+              <div className={styles.boxes}>
+                {buttonBoxesData.map((box, index) => (
+                  <ButtonBox
+                    key={index}
+                    title={box.title}
+                    quantity={box.quantity}
+                    action={box.action}
+                    onClick={box.onClick}
+                  />
+                ))}
+              </div>
+              <div className={styles.category}>
+                <h2>Leagues • {leaguesData.length}</h2>
+              </div>
+              <div className={styles.boxes}>
+                {leaguesData.map((league) => {
+                  const totalPlayers = league.teams_in_league.reduce(
+                    (total, teamData) => {
+                      return total + teamData.team.number_of_players;
+                    },
+                    0
+                  );
 
-              return (
-                <LeagueBox
-                  key={league.id}
-                  onClick={() => onSelectLeague(league)}
-                  title={league.league_name}
-                  blueTag={`${league.number_of_teams} teams`}
-                  greenTag={league.sport_entity.name}
-                  grayTag={`82 / 90`}
-                  orangeTag={
-                    totalPlayers > 0 ? `${totalPlayers} players` : null
-                  }
-                  leagueNumber={league.id.toString()}
-                />
-              );
-            })}
-          </div>
+                  return (
+                    <LeagueBox
+                      key={league.id}
+                      onClick={() => onSelectLeague(league)}
+                      title={league.league_name}
+                      blueTag={`${league.number_of_teams} teams`}
+                      greenTag={league.sport_entity.name}
+                      grayTag={`82 / 90`}
+                      orangeTag={
+                        totalPlayers > 0 ? `${totalPlayers} players` : null
+                      }
+                      leagueNumber={league.id.toString()}
+                    />
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Layout>
   );
 };
 
-export default withAuth(LeaguesPage);
+export default LeaguesPage;

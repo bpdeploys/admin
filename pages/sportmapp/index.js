@@ -11,23 +11,29 @@ import { useRouter } from 'next/router';
 import { fetchAllProviders } from '../../services';
 import styles from './sportmapp.module.scss';
 import withAuth from '../../hoc/withAuth';
+import { useLoading } from '../../utils/hooks/useLoading';
+import Loading from '../../components/Common/Loading';
 
 const SportmappPage = () => {
   const router = useRouter();
   const { selectProvider } = useSportsmappContext();
   const [showModal, setShowModal] = useState(false);
   const [sportsData, setSportsData] = useState([]);
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
   const fetchProviders = async () => {
+    startLoading(); // Start loading indicator
     try {
       const providers = await fetchAllProviders(1);
       setSportsData(providers);
     } catch (error) {
-      console.error('Error fetching providers:', error);
+      console.error('Error fetching providers');
+    } finally {
+      stopLoading(); // Stop loading indicator
     }
   };
 
@@ -54,7 +60,7 @@ const SportmappPage = () => {
       <ProviderModal
         showModal={showModal}
         toggleModal={toggleModal}
-        onProviderCreated={handleProviderCreated} // Pass the function to handle provider creation
+        onProviderCreated={handleProviderCreated}
       />
       <div className={styles.dashboard}>
         <div className={styles.heading}>
@@ -74,28 +80,36 @@ const SportmappPage = () => {
           </div>
         </div>
         <div className={styles.content}>
-          <div className={styles.category}>
-            <h2>Sports Providers • {sportsData.length}</h2>
-          </div>
-          <div className={styles.boxes}>
-            {sportsData.map((provider) => (
-              <TagBox
-                key={provider?.category}
-                onClick={() => onSelectProvider(provider)}
-                title={provider?.name}
-                // blueTag={`${provider?.locations} locations`}
-                // redTag={`${provider?.leagues} leagues`}
-                // greenTag={`${provider?.teams} teams`}
-                // orangeTag={`${provider?.players} players`}
-                // region={provider?.region}
-                // sportIcon={provider?.icon}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className={styles.loadingWrapper}>
+              <Loading />
+            </div>
+          ) : (
+            <>
+              <div className={styles.category}>
+                <h2>Sports Providers • {sportsData.length}</h2>
+              </div>
+              <div className={styles.boxes}>
+                {sportsData.map((provider) => (
+                  <TagBox
+                    key={provider?.category}
+                    onClick={() => onSelectProvider(provider)}
+                    title={provider?.name}
+                    // blueTag={`${provider?.locations} locations`}
+                    // redTag={`${provider?.leagues} leagues`}
+                    // greenTag={`${provider?.teams} teams`}
+                    // orangeTag={`${provider?.players} players`}
+                    // region={provider?.region}
+                    // sportIcon={provider?.icon}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Layout>
   );
 };
 
-export default withAuth(SportmappPage);
+export default SportmappPage;

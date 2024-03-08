@@ -14,7 +14,7 @@ const withAuth = (WrappedComponent) => {
           try {
             await refreshAuth(); // Use your context to refresh status
           } catch (error) {
-            console.error('Error refreshing authentication:', error);
+            console.error('Error refreshing authentication');
           }
         }
 

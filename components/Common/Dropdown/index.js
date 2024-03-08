@@ -3,15 +3,39 @@ import React, { useState } from 'react';
 import styles from './dropdown.module.scss';
 
 /**
+ * Accesses a nested object property using a string path.
+ * If the path includes a '+', the function will concatenate the values found at the specified paths.
+ *
+ * @param {Object} obj - The object to access.
+ * @param {String} path - The string path (e.g., 'user.first_name + user.last_name').
+ * @returns {*} The value at the specified path in the object, or concatenated values if '+' is used.
+ */
+const getNestedValue = (obj, path) => {
+  if (path.includes('+')) {
+    return path
+      .split('+')
+      .map((part) => part.trim())
+      .reduce((acc, part) => {
+        const value = part
+          .split('.')
+          .reduce((acc, part) => acc && acc[part], obj);
+        return acc ? `${acc} ${value}` : value;
+      }, '');
+  } else {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  }
+};
+/**
  * Dropdown component
  *
  * @param {string} id The unique identifier of the dropdown field
  * @param {string} name The name of the dropdown field
  * @param {string} placeholder The placeholder text of the dropdown field
- * @param {string} value The initial value of the dropdown field
  * @param {function} onChange The function to be called when the value of the dropdown field changes
  * @param {function} onBlur The function to be called when the dropdown field loses focus
- * @param {array} items An array of objects containing the dropdown options. Each object should have a `label` and `value` property.
+ * @param {array} items An array of objects containing the dropdown options. The structure of the objects is specified by labelKey and valueKey.
+ * @param {string} labelKey The object property to use as the display label for each dropdown option. Supports nested paths like 'user.name'.
+ * @param {string} valueKey The object property to use as the value for each dropdown option. Supports nested paths.
  * @param {string} color The color of the dropdown field (default: "black")
  *
  * @returns {React.Element} A fieldset element containing a dropdown field
@@ -25,6 +49,8 @@ const Dropdown = React.forwardRef(
       onChange,
       onBlur,
       items,
+      labelKey = 'name',
+      valueKey = 'id',
       color = 'black',
       ...props
     },
@@ -44,7 +70,7 @@ const Dropdown = React.forwardRef(
 
     return (
       <fieldset className={`${styles.dropdown} ${dropdownColorClass}`}>
-        <label>{placeholder}</label>
+        <label htmlFor={id}>{placeholder}</label>
         <select
           id={id}
           name={name}
@@ -57,9 +83,9 @@ const Dropdown = React.forwardRef(
           <option value="" disabled>
             {placeholder}
           </option>
-          {items.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.label}
+          {items.map((item, index) => (
+            <option key={index} value={getNestedValue(item, valueKey)}>
+              {getNestedValue(item, labelKey)}
             </option>
           ))}
         </select>

@@ -6,6 +6,7 @@ import styles from './greenarrowbtn.module.scss';
  * Button component that triggers the creation of a new league.
  *
  * @param {Function} onClick - Function to call when button is clicked.
+ * @param {string} text - The text to display on the button.
  */
 const GreenArrowButton = ({ onClick, text }) => {
   return (

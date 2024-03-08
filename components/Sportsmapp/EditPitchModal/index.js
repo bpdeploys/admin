@@ -22,8 +22,6 @@ const EditPitchModal = ({
     }
   }, [selectedPitch]);
 
-  console.log('SELECTED PITCH', selectedPitch);
-
   const handleUpdatePitch = async () => {
     try {
       await updatePitch(selectedPitch.id, {

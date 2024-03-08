@@ -32,7 +32,7 @@ const EditRefereeModal = ({
       alert('Referee updated successfully');
       onRefereeEdited();
     } catch (error) {
-      alert('Error updating referee:', error);
+      alert('Error updating referee');
     }
   };
 
