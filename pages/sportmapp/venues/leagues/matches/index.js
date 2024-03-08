@@ -122,7 +122,7 @@ const MatchesPage = () => {
     },
     {
       title: 'Teams',
-      quantity: refereesData?.length || 0,
+      quantity: teamsData?.length || 0,
       action: 'View Teams',
       onClick: toggleTeamsModal,
     },
