@@ -273,4 +273,4 @@ const MatchesPage = () => {
   );
 };
 
-export default MatchesPage;
+export default withAuth(MatchesPage);

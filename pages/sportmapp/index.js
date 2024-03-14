@@ -112,4 +112,4 @@ const SportmappPage = () => {
   );
 };
 
-export default SportmappPage;
+export default withAuth(SportmappPage);

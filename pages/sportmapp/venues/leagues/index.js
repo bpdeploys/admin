@@ -269,4 +269,4 @@ const LeaguesPage = () => {
   );
 };
 
-export default LeaguesPage;
+export default withAuth(LeaguesPage);

@@ -123,4 +123,4 @@ const VenuesPage = () => {
   );
 };
 
-export default VenuesPage;
+export default withAuth(VenuesPage);
