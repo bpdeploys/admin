@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './createGOModal.module.scss';
+import styles from './creategomodal.module.scss';
 import { createGeneralOverseer } from '../../../services';
 import Modal from '../../Common/Modal';
 
