@@ -4,7 +4,6 @@ import styles from './refereesmodal.module.scss';
 import GreenArrowButton from '../GreenArrowBtn';
 import ButtonBox from '../../Common/ButtonBox';
 import CreateRefereeModal from '../CreateRefereeModal';
-import { getRefereesByVenue } from '../../../services';
 import EditRefereeModal from '../EditRefereeModal';
 
 const RefereesModal = ({
@@ -13,6 +12,10 @@ const RefereesModal = ({
   selectedVenue,
   refereesData,
   refetchReferees,
+  totalCount,
+  currentPage,
+  totalPages,
+  setPage,
 }) => {
   const [showCreationModal, setShowCreationModal] = useState(false);
   const [selectedReferee, setSelectedReferee] = useState(null);
@@ -35,7 +38,7 @@ const RefereesModal = ({
     <Modal
       show={showModal}
       modalClosed={toggleModal}
-      title={`${refereesData?.length || 0} REFEREES`}
+      title={`${totalCount || 0} REFEREES`}
       width="50%"
       hideActions={showCreationModal || selectedReferee}
     >
@@ -70,6 +73,23 @@ const RefereesModal = ({
                 onClick={() => setSelectedReferee(referee)}
               />
             ))}
+        </div>
+        <div className={styles.pagination}>
+          <button
+            onClick={() => setPage(currentPage - 1)}
+            disabled={currentPage <= 1}
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
     </Modal>

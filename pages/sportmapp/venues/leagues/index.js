@@ -17,9 +17,9 @@ import VenuesManagerModal from '../../../../components/Sportsmapp/VenueManagerMo
 import LeaguesModal from '../../../../components/Sportsmapp/LeaguesModal';
 import {
   fetchAllLeaguesByVenue,
-  getPitchesByVenue,
-  getRefereesByVenue,
-  getVenueManagersByVenue,
+  fetchPitchesByVenue,
+  fetchRefereesByVenue,
+  fetchVenueManagersByVenue,
 } from '../../../../services';
 import withAuth from '../../../../hoc/withAuth';
 import Loading from '../../../../components/Common/Loading';
@@ -37,6 +37,11 @@ const LeaguesPage = () => {
   const [showRefereesModal, setShowRefereesModal] = useState(false);
   const [showVenueManagersModal, setShowVenueManagersModal] = useState(false);
 
+  // Referees pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalReferees, setTotalReferees] = useState(0);
+
+  // Loading
   const [loadingLeagues, setLoadingLeagues] = useState(false);
   const [loadingPitches, setLoadingPitches] = useState(false);
   const [loadingReferees, setLoadingReferees] = useState(false);
@@ -68,7 +73,7 @@ const LeaguesPage = () => {
   const fetchPitches = async () => {
     setLoadingPitches(true);
     try {
-      const data = await getPitchesByVenue(selectedVenue.id);
+      const data = await fetchPitchesByVenue(selectedVenue.id);
       setPitchesData(data);
     } catch (error) {
       console.error('Error fetching pitches', error);
@@ -77,11 +82,16 @@ const LeaguesPage = () => {
     }
   };
 
-  const fetchReferees = async () => {
+  const fetchReferees = async (page = 1) => {
     setLoadingReferees(true);
     try {
-      const data = await getRefereesByVenue(selectedVenue.id);
-      setRefereesData(data.results); // Assuming the results are nested
+      const { count, results } = await fetchRefereesByVenue(
+        selectedVenue.id,
+        page
+      );
+      setRefereesData(results);
+      setTotalReferees(count);
+      setCurrentPage(page); // Update current page
     } catch (error) {
       console.error('Error fetching referees', error);
     } finally {
@@ -92,7 +102,7 @@ const LeaguesPage = () => {
   const fetchVms = async () => {
     setLoadingVms(true);
     try {
-      const data = await getVenueManagersByVenue(selectedVenue.id);
+      const data = await fetchVenueManagersByVenue(selectedVenue.id);
       setVmsData(data);
     } catch (error) {
       console.error('Error fetching venue managers', error);
@@ -128,7 +138,7 @@ const LeaguesPage = () => {
     },
     {
       title: 'Referees',
-      quantity: refereesData?.length || 0,
+      quantity: totalReferees || 0,
       action: 'View Referees',
       onClick: toggleRefereesModal,
     },
@@ -179,7 +189,11 @@ const LeaguesPage = () => {
           toggleModal={toggleRefereesModal}
           selectedVenue={selectedVenue?.id}
           refereesData={refereesData}
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalReferees / 10)}
+          setPage={fetchReferees}
           refetchReferees={handleRefereeRefetch}
+          totalCount={totalReferees}
         />
         <VenuesManagerModal
           showModal={showVenueManagersModal}

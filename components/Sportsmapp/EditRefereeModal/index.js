@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './editrefereemodal.module.scss';
 import TopModal from '../../Common/TopModal';
-import { updateUser } from '../../../services';
+import { deleteReferee, updateUser } from '../../../services';
 
 const EditRefereeModal = ({
   showModal,
@@ -33,6 +33,23 @@ const EditRefereeModal = ({
       onRefereeEdited();
     } catch (error) {
       alert('Error updating referee');
+    }
+  };
+
+  const handleDeleteReferee = async () => {
+    const confirmDeletion = window.confirm(
+      'Are you sure you want to delete this referee?'
+    );
+    if (confirmDeletion) {
+      try {
+        await deleteReferee(selectedReferee.id);
+        alert('Referee deleted successfully');
+        onRefereeEdited();
+        toggleModal();
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred while deleting the referee');
+      }
     }
   };
 
@@ -68,6 +85,9 @@ const EditRefereeModal = ({
         />
         <button className={styles.submitButton} onClick={handleUpdateReferee}>
           Update Referee
+        </button>
+        <button className={styles.deleteButton} onClick={handleDeleteReferee}>
+          Delete Referee
         </button>
       </div>
     </TopModal>

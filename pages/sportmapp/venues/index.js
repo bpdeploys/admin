@@ -13,16 +13,22 @@ import styles from './venues.module.scss';
 import withAuth from '../../../hoc/withAuth';
 import { useLoading } from '../../../utils/hooks/useLoading';
 import Loading from '../../../components/Common/Loading';
+import CreateGeneralOverseerModal from '../../../components/Sportsmapp/CreateGeneralOverseerModal';
 
 const VenuesPage = () => {
   const router = useRouter();
   const { selectedProvider, selectVenue } = useSportsmappContext();
   const [venuesData, setVenuesData] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showGoModal, setShowGoModal] = useState(false);
   const { isLoading, startLoading, stopLoading } = useLoading();
 
   const toggleModal = () => {
     setShowModal(!showModal);
+  };
+
+  const toggleGoModal = () => {
+    setShowGoModal(!showGoModal);
   };
 
   const fetchVenues = async () => {
@@ -53,18 +59,22 @@ const VenuesPage = () => {
   };
 
   const handleVenueCreated = async () => {
-    await fetchVenues(); // Refetch venues
-    toggleModal(); // Close modal
+    await fetchVenues();
+    toggleModal();
   };
 
   return (
     <Layout>
       <div className={styles.dashboard}>
+        <CreateGeneralOverseerModal
+          showModal={showGoModal}
+          toggleModal={toggleGoModal}
+        />
         <VenuesModal
           showModal={showModal}
           toggleModal={toggleModal}
           selectedProvider={selectedProvider?.id}
-          onVenueCreated={handleVenueCreated} // Pass the function to handle venue creation success
+          onVenueCreated={handleVenueCreated}
         />
         <div className={styles.heading}>
           <div>
@@ -88,6 +98,12 @@ const VenuesPage = () => {
             <>
               <div className={styles.category}>
                 <h2>Venues • {venuesData.length}</h2>
+              </div>
+              <div className={styles.createGoButton}>
+                <BlueButton
+                  text="Create Personnel"
+                  onClick={() => toggleGoModal()}
+                />
               </div>
               <div className={styles.boxes}>
                 {venuesData.map((venue) => (

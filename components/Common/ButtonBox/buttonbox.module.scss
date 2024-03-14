@@ -26,8 +26,13 @@
     }
   }
 
-  .action {
-    background-color: #0e4980;
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .action,
+  .deleteAction {
     color: #fff;
     padding: 5px 0;
     cursor: pointer;
@@ -39,9 +44,21 @@
     text-align: center;
     border: none;
     transition: all 0.3s ease-in-out;
+  }
+
+  .action {
+    background-color: #0e4980;
 
     &:hover {
       background-color: darken(#0e4980, 3%);
+    }
+  }
+
+  .deleteAction {
+    background-color: #d32f2f;
+
+    &:hover {
+      background-color: darken(#d32f2f, 3%);
     }
   }
 }

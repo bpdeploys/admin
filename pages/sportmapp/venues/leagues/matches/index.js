@@ -2,32 +2,29 @@ import Image from 'next/image';
 import styles from './leagues.module.scss';
 import Layout from '../../../../../components/Layout/LayoutWrapper';
 import Breadcrumbs from '../../../../../components/Sportsmapp/Breadcrumbs';
-import { useRouter } from 'next/router';
 import { useSportsmappContext } from '../../../../../context/SportsmappContext';
 import { useEffect, useState } from 'react';
 import GreenArrowButton from '../../../../../components/Sportsmapp/GreenArrowBtn';
-import LeagueBox from '../../../../../components/Sportsmapp/LeagueBox';
 import ButtonBox from '../../../../../components/Common/ButtonBox';
 import PitchesModal from '../../../../../components/Sportsmapp/PitchesModal';
-import RefereesModal from '../../../../../components/Sportsmapp/RefereesModal';
-import VenuesManagerModal from '../../../../../components/Sportsmapp/VenueManagerModal';
-import LeaguesModal from '../../../../../components/Sportsmapp/LeaguesModal';
 import {
-  fetchAllLeaguesByVenue,
-  getMatchesByLeague,
-  getPitchesByVenue,
-  getPitchesByVenueAndFormat,
-  getRefereesByVenue,
-  getTeamsByLeague,
-  getVenueManagersByVenue,
+  deleteLeague,
+  deleteMatch,
+  fetchMatchesByLeague,
+  fetchPitchesByVenueAndFormat,
+  fetchRefereesByVenue,
+  fetchTeamsByLeague,
 } from '../../../../../services';
 import withAuth from '../../../../../hoc/withAuth';
 import MatchBox from '../../../../../components/Sportsmapp/MatchBox';
 import MatchesModal from '../../../../../components/Sportsmapp/MatchesModal';
 import TeamsModal from '../../../../../components/Sportsmapp/TeamsModal';
 import Loading from '../../../../../components/Common/Loading';
+import DeleteButton from '../../../../../components/Sportsmapp/DeleteButton';
+import { useRouter } from 'next/router';
 
 const MatchesPage = () => {
+  const router = useRouter();
   const { selectedLeague, selectedVenue, selectedProvider } =
     useSportsmappContext();
   const [showModal, setShowModal] = useState(false);
@@ -37,13 +34,13 @@ const MatchesPage = () => {
   const [pitchesData, setPitchesData] = useState([]);
   const [showPitchesModal, setShowPitchesModal] = useState(false);
   const [showTeamsModal, setShowTeamsModal] = useState(false);
-  // Separate loading states
+
+  // Loading
   const [loadingMatches, setLoadingMatches] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [loadingPitches, setLoadingPitches] = useState(false);
   const [loadingReferees, setLoadingReferees] = useState(false);
 
-  // Computed state to determine if any fetch is in progress
   const isLoading =
     loadingMatches || loadingTeams || loadingPitches || loadingReferees;
 
@@ -65,7 +62,7 @@ const MatchesPage = () => {
   const fetchMatches = async () => {
     setLoadingMatches(true);
     try {
-      const data = await getMatchesByLeague(selectedLeague.id);
+      const data = await fetchMatchesByLeague(selectedLeague.id);
       setMatchesData(data);
     } catch (error) {
       console.error('Error fetching matches', error);
@@ -77,7 +74,7 @@ const MatchesPage = () => {
   const fetchTeams = async () => {
     setLoadingTeams(true);
     try {
-      const data = await getTeamsByLeague(selectedLeague.id);
+      const data = await fetchTeamsByLeague(selectedLeague.id);
       setTeamsData(data);
     } catch (error) {
       console.error('Error fetching teams', error);
@@ -89,7 +86,7 @@ const MatchesPage = () => {
   const fetchPitches = async () => {
     setLoadingPitches(true);
     try {
-      const data = await getPitchesByVenueAndFormat(
+      const data = await fetchPitchesByVenueAndFormat(
         selectedVenue.id,
         selectedLeague.league_format
       );
@@ -104,7 +101,7 @@ const MatchesPage = () => {
   const fetchReferees = async () => {
     setLoadingReferees(true);
     try {
-      const data = await getRefereesByVenue(selectedVenue.id);
+      const data = await fetchRefereesByVenue(selectedVenue.id);
       setRefereesData(data.results); // Assuming the results are nested
     } catch (error) {
       console.error('Error fetching referees', error);
@@ -137,12 +134,32 @@ const MatchesPage = () => {
     await fetchPitches();
   };
 
-  const handleRefereeRefetch = async () => {
-    await fetchReferees();
-  };
-
   const handleRefetchTeams = async () => {
     await fetchTeams();
+  };
+
+  const handleDeleteLeague = async () => {
+    const confirmDeletion = window.confirm(
+      'Are you sure you want to delete this league?'
+    );
+    if (confirmDeletion) {
+      try {
+        await deleteLeague(selectedLeague?.id);
+        router.push('/sportmapp/venues/leagues/');
+      } catch (error) {
+        console.error('Failed to delete the league');
+      }
+    }
+  };
+
+  const handleDeleteMatch = async (matchId) => {
+    try {
+      await deleteMatch(matchId);
+      setMatchesData(matchesData.filter((match) => match.id !== matchId));
+      await fetchMatches();
+    } catch (error) {
+      console.error('Error deleting match', error);
+    }
   };
 
   function convertFormat(format, sport) {
@@ -197,6 +214,7 @@ const MatchesPage = () => {
             <Breadcrumbs />
           </div>
           <div>
+            <DeleteButton text="Delete League" onClick={handleDeleteLeague} />
             <GreenArrowButton
               text="Create New Match"
               onClick={() => toggleModal()}
@@ -242,6 +260,7 @@ const MatchesPage = () => {
                       team1={match.team1.team_name}
                       team2={match.team2.team_name}
                       date={match.date}
+                      onDelete={() => handleDeleteMatch(match.id)}
                     />
                   );
                 })}

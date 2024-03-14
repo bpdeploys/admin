@@ -4,7 +4,7 @@ import styles from './pitchesmodal.module.scss';
 import GreenArrowButton from '../GreenArrowBtn';
 import ButtonBox from '../../Common/ButtonBox';
 import CreatePitchModal from '../CreatePitchModal';
-import { getPitchesByVenue } from '../../../services';
+import { fetchPitchesByVenue } from '../../../services';
 import EditPitchModal from '../EditPitchModal';
 
 const PitchesModal = ({

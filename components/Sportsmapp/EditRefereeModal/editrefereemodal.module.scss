@@ -39,8 +39,8 @@
   width: 80%;
 }
 
-.submitButton {
-  background-color: #000;
+.submitButton,
+.deleteButton {
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -49,4 +49,13 @@
   width: 252px;
   border-radius: 10px;
   margin-top: 4rem;
+}
+
+.submitButton {
+  background-color: #000;
+}
+
+.deleteButton {
+  background-color: #bc1010;
+  margin-top: 15px;
 }

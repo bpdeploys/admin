@@ -74,7 +74,7 @@ const MatchesModal = ({
         league_match: 1,
         matchweek: 1,
       };
-      await createMatch(matchData); // Ensure this function is implemented and correctly sends data to your backend
+      await createMatch(matchData);
       alert('Match created successfully');
       if (onMatchCreated) {
         onMatchCreated();
@@ -83,8 +83,6 @@ const MatchesModal = ({
       console.error('Error creating match');
     }
   };
-
-  console.log('TEAMS FROM MATCHES CREATION', teams);
 
   return (
     <Modal show={showModal} modalClosed={toggleModal} title="Create New Match">

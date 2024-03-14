@@ -21,6 +21,19 @@
     width: 110px;
   }
 
+  .deleteIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    opacity: 0.2;
+    transition: opacity 0.25s ease-in-out;
+  }
+
+  .box:hover .deleteIcon {
+    opacity: 1;
+  }
+
   .leagueNumber {
     color: #747473;
     font-size: 10px;

@@ -25,9 +25,16 @@
   padding: 0 2.5rem 2.5rem 2.5rem;
   overflow: auto;
   height: 82vh;
+  position: relative;
 
   h2 {
     font-size: 18px;
+  }
+
+  .createGoButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
   }
 }
 

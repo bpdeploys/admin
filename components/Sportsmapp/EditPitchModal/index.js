@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './editpitchmodal.module.scss';
 import TopModal from '../../Common/TopModal';
-import { updatePitch } from '../../../services';
+import { updatePitch, deletePitch } from '../../../services';
 
 const EditPitchModal = ({
   showModal,
@@ -14,7 +14,6 @@ const EditPitchModal = ({
   const [surface, setSurface] = useState('');
 
   useEffect(() => {
-    // Set initial values when selectedPitch changes
     if (selectedPitch) {
       setName(selectedPitch.name);
       setFormat(selectedPitch.format_pitch);
@@ -31,8 +30,27 @@ const EditPitchModal = ({
       });
       alert('Pitch updated successfully');
       onPitchEdited();
+      toggleModal();
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      alert('An error occurred while updating the pitch');
+    }
+  };
+
+  const handleDeletePitch = async () => {
+    const confirmDeletion = window.confirm(
+      'Are you sure you want to delete this pitch?'
+    );
+    if (confirmDeletion) {
+      try {
+        await deletePitch(selectedPitch.id);
+        alert('Pitch deleted successfully');
+        onPitchEdited();
+        toggleModal();
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred while deleting the pitch');
+      }
     }
   };
 
@@ -68,6 +86,9 @@ const EditPitchModal = ({
         />
         <button className={styles.submitButton} onClick={handleUpdatePitch}>
           Update Pitch
+        </button>
+        <button className={styles.deleteButton} onClick={handleDeletePitch}>
+          Delete Pitch
         </button>
       </div>
     </TopModal>

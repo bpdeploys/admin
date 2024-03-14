@@ -27,8 +27,6 @@ const TeamsModal = ({
     toggleCreationModal();
   };
 
-  console.log('TEAMS DATA FROM MODAL', teamsData);
-
   return (
     <Modal
       show={showModal}

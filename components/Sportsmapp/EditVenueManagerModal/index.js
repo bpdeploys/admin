@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './editvmmodal.module.scss';
 import TopModal from '../../Common/TopModal';
-import { updateUser } from '../../../services';
+import { deleteVm, updateUser } from '../../../services';
 
 /**
  * EditVenueManagerModal component for editing venue manager details.
@@ -45,6 +45,23 @@ const EditVenueManagerModal = ({
     }
   };
 
+  const handleDeleteVenueManager = async () => {
+    const confirmDeletion = window.confirm(
+      'Are you sure you want to delete this VM?'
+    );
+    if (confirmDeletion) {
+      try {
+        await deleteVm(selectedVm.id);
+        alert('Venue Manager deleted successfully');
+        onVmEdited();
+        toggleModal();
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred while deleting the venue manager');
+      }
+    }
+  };
+
   return (
     <TopModal
       show={showModal}
@@ -80,6 +97,12 @@ const EditVenueManagerModal = ({
           onClick={handleUpdateVenueManager}
         >
           Update VM
+        </button>
+        <button
+          className={styles.deleteButton}
+          onClick={handleDeleteVenueManager}
+        >
+          Delete VM
         </button>
       </div>
     </TopModal>
