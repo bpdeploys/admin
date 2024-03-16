@@ -56,7 +56,28 @@ const MatchesModal = ({
     { id: 'Kick-about', name: 'Kick-about' },
   ];
 
+  const refereesWithAllOption = [
+    { id: 'all', user: { first_name: 'All', last_name: '' } },
+    ...referees,
+  ];
+
+  const resetForm = () => {
+    setTeam1('');
+    setTeam2('');
+    setMatchType('');
+    setGameTime('');
+    setKickOff('');
+    setDate('');
+    setReferee('');
+    setPitch('');
+    setAccepted(false);
+    setLive(false);
+  };
+
   const handleSubmit = async () => {
+    // If "All" is selected for referee, set referee value to an empty string or null
+    const effectiveReferee = referee === 'all' ? '' : referee;
+
     try {
       const matchData = {
         team1,
@@ -68,13 +89,14 @@ const MatchesModal = ({
         kick_off: kickOff,
         date,
         live,
-        referee,
+        referee: effectiveReferee,
         pitch,
         created_by_venue: selectedVenue,
         league_match: 1,
         matchweek: 1,
       };
       await createMatch(matchData);
+      resetForm();
       alert('Match created successfully');
       if (onMatchCreated) {
         onMatchCreated();
@@ -133,7 +155,7 @@ const MatchesModal = ({
             className={styles.dropdown}
             value={referee}
             onChange={(e) => setReferee(e.target.value)}
-            items={referees}
+            items={refereesWithAllOption}
             placeholder="Select Referee"
             labelKey="user.first_name + user.last_name"
           />
