@@ -4,6 +4,8 @@ import { createLeague } from '../../../services';
 import styles from './leaguesmodal.module.scss';
 import constants from '../../../utils/data/constants';
 import Dropdown from '../../Common/Dropdown';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 /**
  * Renders a modal to create a new league
@@ -37,6 +39,8 @@ const LeaguesModal = ({
   const [sport, setSport] = useState('');
   const [dateInputType, setDateInputType] = useState('text');
 
+  const { isLoading, startLoading, stopLoading } = useLoading();
+
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -58,6 +62,7 @@ const LeaguesModal = ({
     // Format start date to YYYY-MM-DD HH:MM:SS format
     const formattedStartDate = new Date(startDate).toISOString();
 
+    startLoading();
     try {
       const leagueData = {
         league_name: leagueName,
@@ -85,6 +90,8 @@ const LeaguesModal = ({
       }
     } catch (error) {
       console.error('Error creating league');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -222,8 +229,21 @@ const LeaguesModal = ({
             placeholder="Sport"
           />
         </div>
-        <button className={styles.submitButton} onClick={handleSubmit}>
-          Create League
+        <button
+          className={styles.submitButton}
+          onClick={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create League'
+          )}
         </button>
       </div>
     </Modal>

@@ -8,6 +8,8 @@ import {
 } from '../../../services'; // Ensure these functions are implemented in your services
 import styles from './matchesmodal.module.scss';
 import Dropdown from '../../Common/Dropdown';
+import Image from 'next/image';
+import { useLoading } from '../../../utils/hooks/useLoading';
 
 /**
  * Renders a modal to create a new match
@@ -44,6 +46,8 @@ const MatchesModal = ({
   const [dateInputType, setDateInputType] = useState('text');
   const [timeInputType, setTimeInputType] = useState('text');
 
+  const { isLoading, startLoading, stopLoading } = useLoading();
+
   const handleDateFocus = () => setDateInputType('date');
   const handleDateBlur = () => !date && setDateInputType('text');
 
@@ -78,6 +82,8 @@ const MatchesModal = ({
     // If "All" is selected for referee, set referee value to an empty string or null
     const effectiveReferee = referee === 'all' ? '' : referee;
 
+    startLoading();
+
     try {
       const matchData = {
         team1,
@@ -103,6 +109,8 @@ const MatchesModal = ({
       }
     } catch (error) {
       console.error('Error creating match');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -189,13 +197,22 @@ const MatchesModal = ({
                 type="checkbox"
                 checked={live}
                 onChange={() => setLive(!live)}
-              />{' '}
+              />
               Live
             </label>
           </div>
         </div>
         <button className={styles.submitButton} onClick={handleSubmit}>
-          Create Match
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create Match'
+          )}
         </button>
       </div>
     </Modal>

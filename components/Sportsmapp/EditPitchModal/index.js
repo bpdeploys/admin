@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './editpitchmodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { updatePitch, deletePitch } from '../../../services';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 const EditPitchModal = ({
   showModal,
@@ -13,6 +15,17 @@ const EditPitchModal = ({
   const [format, setFormat] = useState('');
   const [surface, setSurface] = useState('');
 
+  const {
+    isLoading: isUpdating,
+    startLoading: startUpdating,
+    stopLoading: stopUpdating,
+  } = useLoading();
+  const {
+    isLoading: isDeleting,
+    startLoading: startDeleting,
+    stopLoading: stopDeleting,
+  } = useLoading();
+
   useEffect(() => {
     if (selectedPitch) {
       setName(selectedPitch.name);
@@ -22,6 +35,8 @@ const EditPitchModal = ({
   }, [selectedPitch]);
 
   const handleUpdatePitch = async () => {
+    startUpdating();
+
     try {
       await updatePitch(selectedPitch.id, {
         name,
@@ -34,10 +49,14 @@ const EditPitchModal = ({
     } catch (error) {
       console.error(error);
       alert('An error occurred while updating the pitch');
+    } finally {
+      stopUpdating();
     }
   };
 
   const handleDeletePitch = async () => {
+    startDeleting();
+
     const confirmDeletion = window.confirm(
       'Are you sure you want to delete this pitch?'
     );
@@ -50,6 +69,8 @@ const EditPitchModal = ({
       } catch (error) {
         console.error(error);
         alert('An error occurred while deleting the pitch');
+      } finally {
+        stopDeleting();
       }
     }
   };
@@ -84,11 +105,37 @@ const EditPitchModal = ({
           value={surface}
           onChange={(e) => setSurface(e.target.value)}
         />
-        <button className={styles.submitButton} onClick={handleUpdatePitch}>
-          Update Pitch
+        <button
+          className={styles.submitButton}
+          onClick={handleUpdatePitch}
+          disabled={isUpdating}
+        >
+          {isUpdating ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Update Pitch'
+          )}
         </button>
-        <button className={styles.deleteButton} onClick={handleDeletePitch}>
-          Delete Pitch
+        <button
+          className={styles.deleteButton}
+          onClick={handleDeletePitch}
+          disabled={isDeleting}
+        >
+          {isDeleting ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Delete Pitch'
+          )}
         </button>
       </div>
     </TopModal>

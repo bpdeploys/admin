@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './editvmmodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { deleteVm, updateUser } from '../../../services';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 /**
  * EditVenueManagerModal component for editing venue manager details.
@@ -31,7 +33,19 @@ const EditVenueManagerModal = ({
     }
   }, [selectedVm]);
 
+  const {
+    isLoading: isUpdating,
+    startLoading: startUpdating,
+    stopLoading: stopUpdating,
+  } = useLoading();
+  const {
+    isLoading: isDeleting,
+    startLoading: startDeleting,
+    stopLoading: stopDeleting,
+  } = useLoading();
+
   const handleUpdateVenueManager = async () => {
+    startUpdating();
     try {
       await updateUser(selectedVm.user.id, {
         first_name: firstName,
@@ -42,6 +56,8 @@ const EditVenueManagerModal = ({
       onVmEdited();
     } catch (error) {
       alert('Error updating VenueManager');
+    } finally {
+      stopUpdating();
     }
   };
 
@@ -50,6 +66,7 @@ const EditVenueManagerModal = ({
       'Are you sure you want to delete this VM?'
     );
     if (confirmDeletion) {
+      startDeleting();
       try {
         await deleteVm(selectedVm.id);
         alert('Venue Manager deleted successfully');
@@ -58,6 +75,8 @@ const EditVenueManagerModal = ({
       } catch (error) {
         console.error(error);
         alert('An error occurred while deleting the venue manager');
+      } finally {
+        stopDeleting();
       }
     }
   };
@@ -95,14 +114,34 @@ const EditVenueManagerModal = ({
         <button
           className={styles.submitButton}
           onClick={handleUpdateVenueManager}
+          disabled={isUpdating}
         >
-          Update VM
+          {isUpdating ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Update VM'
+          )}
         </button>
         <button
           className={styles.deleteButton}
           onClick={handleDeleteVenueManager}
+          disabled={isDeleting}
         >
-          Delete VM
+          {isDeleting ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Delete VM'
+          )}
         </button>
       </div>
     </TopModal>

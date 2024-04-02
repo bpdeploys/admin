@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import styles from './creategomodal.module.scss';
 import { createGeneralOverseer } from '../../../services';
 import Modal from '../../Common/Modal';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 const CreateGeneralOverseerModal = ({ showModal, toggleModal }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const generateRandomPassword = () => {
     return Math.random().toString(36).slice(-8);
@@ -18,6 +22,7 @@ const CreateGeneralOverseerModal = ({ showModal, toggleModal }) => {
   };
 
   const handleCreateGeneralOverseer = async () => {
+    startLoading();
     const password = generateRandomPassword();
     const email = generateRandomEmail(firstName, lastName);
 
@@ -34,6 +39,8 @@ const CreateGeneralOverseerModal = ({ showModal, toggleModal }) => {
       toggleModal();
     } catch (error) {
       alert('Error creating General Overseer');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -69,8 +76,18 @@ const CreateGeneralOverseerModal = ({ showModal, toggleModal }) => {
         <button
           className={styles.submitButton}
           onClick={handleCreateGeneralOverseer}
+          disabled={isLoading}
         >
-          Create General Overseer
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create General Overseer'
+          )}
         </button>
       </div>
     </Modal>

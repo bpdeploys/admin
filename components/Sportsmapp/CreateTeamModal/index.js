@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styles from './createteammodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { createTeam } from '../../../services';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 const CreateTeamModal = ({
   showModal,
@@ -13,7 +15,10 @@ const CreateTeamModal = ({
 }) => {
   const [name, setName] = useState('');
 
+  const { isLoading, startLoading, stopLoading } = useLoading();
+
   const handleCreateTeam = async () => {
+    startLoading();
     try {
       await createTeam({
         team_name: name,
@@ -28,6 +33,8 @@ const CreateTeamModal = ({
       onTeamCreated();
     } catch (error) {
       alert('Error creating pitch');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -47,8 +54,21 @@ const CreateTeamModal = ({
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <button className={styles.submitButton} onClick={handleCreateTeam}>
-          Create Team
+        <button
+          className={styles.submitButton}
+          onClick={handleCreateTeam}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create Team'
+          )}
         </button>
       </div>
     </TopModal>

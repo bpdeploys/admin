@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Modal from '../../Common/Modal';
 import { createVenue } from '../../../services';
 import styles from './venuesmodal.module.scss';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 const VenuesModal = ({
   showModal,
@@ -13,8 +15,8 @@ const VenuesModal = ({
   const [name, setName] = useState('');
   const [mainSport, setMainSport] = useState('');
   const [region, setRegion] = useState('');
-  const [postcode1, setPostcode1] = useState('');
-  const [postcode2, setPostcode2] = useState('');
+
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
@@ -28,6 +30,7 @@ const VenuesModal = ({
   };
 
   const handleSubmit = async () => {
+    startLoading();
     try {
       const venue = {
         name,
@@ -40,6 +43,8 @@ const VenuesModal = ({
       onVenueCreated(); // Call the function to handle venue creation success
     } catch (error) {
       console.error(error);
+    } finally {
+      stopLoading();
     }
   };
 
@@ -95,8 +100,21 @@ const VenuesModal = ({
           value={postcode2}
           onChange={(e) => setPostcode2(e.target.value)}
         /> */}
-        <button className={styles.submitButton} onClick={handleSubmit}>
-          Create Venue
+        <button
+          className={styles.submitButton}
+          onClick={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create Venue'
+          )}
         </button>
       </div>
     </Modal>

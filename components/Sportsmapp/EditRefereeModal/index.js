@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './editrefereemodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { deleteReferee, updateUser } from '../../../services';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 const EditRefereeModal = ({
   showModal,
@@ -22,7 +24,19 @@ const EditRefereeModal = ({
     }
   }, [selectedReferee]);
 
+  const {
+    isLoading: isUpdating,
+    startLoading: startUpdating,
+    stopLoading: stopUpdating,
+  } = useLoading();
+  const {
+    isLoading: isDeleting,
+    startLoading: startDeleting,
+    stopLoading: stopDeleting,
+  } = useLoading();
+
   const handleUpdateReferee = async () => {
+    startUpdating();
     try {
       await updateUser(selectedReferee.user.id, {
         first_name: firstName,
@@ -33,6 +47,8 @@ const EditRefereeModal = ({
       onRefereeEdited();
     } catch (error) {
       alert('Error updating referee');
+    } finally {
+      stopUpdating();
     }
   };
 
@@ -42,6 +58,7 @@ const EditRefereeModal = ({
     );
     if (confirmDeletion) {
       try {
+        startDeleting();
         await deleteReferee(selectedReferee.id);
         alert('Referee deleted successfully');
         onRefereeEdited();
@@ -49,6 +66,8 @@ const EditRefereeModal = ({
       } catch (error) {
         console.error(error);
         alert('An error occurred while deleting the referee');
+      } finally {
+        stopDeleting();
       }
     }
   };
@@ -83,11 +102,37 @@ const EditRefereeModal = ({
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
-        <button className={styles.submitButton} onClick={handleUpdateReferee}>
-          Update Referee
+        <button
+          className={styles.submitButton}
+          onClick={handleUpdateReferee}
+          disabled={isUpdating}
+        >
+          {isUpdating ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Update Referee'
+          )}
         </button>
-        <button className={styles.deleteButton} onClick={handleDeleteReferee}>
-          Delete Referee
+        <button
+          className={styles.deleteButton}
+          onClick={handleDeleteReferee}
+          disabled={isDeleting}
+        >
+          {isDeleting ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Delete Referee'
+          )}
         </button>
       </div>
     </TopModal>

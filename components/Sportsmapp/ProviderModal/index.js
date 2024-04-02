@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Modal from '../../Common/Modal';
 import { createProvider } from '../../../services';
 import styles from './providermodal.module.scss';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 const ProviderModal = ({ showModal, toggleModal, onProviderCreated }) => {
   // Accept onProviderCreated prop
@@ -10,6 +12,8 @@ const ProviderModal = ({ showModal, toggleModal, onProviderCreated }) => {
   const [country, setCountry] = useState('');
   const [address, setAddress] = useState('');
   const [website, setWebsite] = useState('');
+
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
@@ -23,6 +27,8 @@ const ProviderModal = ({ showModal, toggleModal, onProviderCreated }) => {
   };
 
   const handleSubmit = async () => {
+    startLoading();
+
     try {
       // Create the provider object
       const provider = {
@@ -39,6 +45,8 @@ const ProviderModal = ({ showModal, toggleModal, onProviderCreated }) => {
       onProviderCreated();
     } catch (error) {
       console.error(error);
+    } finally {
+      stopLoading();
     }
   };
 
@@ -91,8 +99,21 @@ const ProviderModal = ({ showModal, toggleModal, onProviderCreated }) => {
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
         />
-        <button className={styles.submitButton} onClick={handleSubmit}>
-          Create Provider
+        <button
+          className={styles.submitButton}
+          onClick={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create Provider'
+          )}
         </button>
       </div>
     </Modal>

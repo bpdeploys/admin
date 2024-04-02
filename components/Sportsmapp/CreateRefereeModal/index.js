@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styles from './createrefereemodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { createReferee } from '../../../services';
+import { useLoading } from '../../../utils/hooks/useLoading';
+import Image from 'next/image';
 
 const CreateRefereeModal = ({
   showModal,
@@ -13,6 +15,8 @@ const CreateRefereeModal = ({
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
@@ -35,7 +39,8 @@ const CreateRefereeModal = ({
   };
 
   const handleCreateReferee = async () => {
-    const password = generateRandomPassword();
+    startLoading();
+
     const email = generateRandomEmail(firstName, lastName);
 
     try {
@@ -51,6 +56,8 @@ const CreateRefereeModal = ({
       onRefereeCreated();
     } catch (error) {
       alert('Error creating referee');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -98,8 +105,21 @@ const CreateRefereeModal = ({
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
-        <button className={styles.submitButton} onClick={handleCreateReferee}>
-          Create Referee
+        <button
+          className={styles.submitButton}
+          onClick={handleCreateReferee}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create Referee'
+          )}
         </button>
       </div>
     </TopModal>

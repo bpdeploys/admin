@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styles from './createpitchmodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { createPitch } from '../../../services';
+import Image from 'next/image';
+import { useLoading } from '../../../utils/hooks/useLoading';
 
 const CreatePitchModal = ({
   showModal,
@@ -13,6 +15,8 @@ const CreatePitchModal = ({
   const [format, setFormat] = useState('');
   const [surface, setSurface] = useState('');
   const [logo, setLogo] = useState(null);
+
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
@@ -26,6 +30,8 @@ const CreatePitchModal = ({
   };
 
   const handleCreatePitch = async () => {
+    startLoading();
+
     try {
       await createPitch({
         name,
@@ -37,6 +43,8 @@ const CreatePitchModal = ({
       onPitchCreated();
     } catch (error) {
       alert('Error creating pitch');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -84,8 +92,21 @@ const CreatePitchModal = ({
           value={surface}
           onChange={(e) => setSurface(e.target.value)}
         />
-        <button className={styles.submitButton} onClick={handleCreatePitch}>
-          Create Pitch
+        <button
+          className={styles.submitButton}
+          onClick={handleCreatePitch}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create Pitch'
+          )}
         </button>
       </div>
     </TopModal>

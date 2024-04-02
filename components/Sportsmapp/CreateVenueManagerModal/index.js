@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styles from './createvenuemanagermodal.module.scss';
 import TopModal from '../../Common/TopModal';
 import { createVenueManager } from '../../../services';
+import Image from 'next/image';
+import { useLoading } from '../../../utils/hooks/useLoading';
 
 const CreateVenueManagerModal = ({
   showModal,
@@ -13,6 +15,8 @@ const CreateVenueManagerModal = ({
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
@@ -35,6 +39,8 @@ const CreateVenueManagerModal = ({
   };
 
   const handleCreateVenueManager = async () => {
+    startLoading();
+
     const password = generateRandomPassword();
     const email = generateRandomEmail(firstName, lastName);
 
@@ -48,10 +54,12 @@ const CreateVenueManagerModal = ({
         type: 'R',
         venue: selectedVenue,
       });
-      alert('VenueManager created successfully');
+      alert('VM created successfully');
       onVmCreated();
     } catch (error) {
-      alert('Error creating VenueManager');
+      alert('Error creating VM');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -102,8 +110,18 @@ const CreateVenueManagerModal = ({
         <button
           className={styles.submitButton}
           onClick={handleCreateVenueManager}
+          disabled={isLoading}
         >
-          Create VM
+          {isLoading ? (
+            <Image
+              src="/assets/imgs/svgs/LoadingIcon.svg"
+              alt="Loading"
+              width={16}
+              height={16}
+            />
+          ) : (
+            'Create VM'
+          )}
         </button>
       </div>
     </TopModal>
