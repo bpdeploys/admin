@@ -8,30 +8,30 @@ const withAuth = (WrappedComponent) => {
     const router = useRouter();
     const { userInfo, refreshAuth } = useAuth();
 
-    // useEffect(() => {
-    //   const checkAuth = async () => {
-    //     if (!userInfo) {
-    //       try {
-    //         await refreshAuth(); // Use your context to refresh status
-    //       } catch (error) {
-    //         console.error('Error refreshing authentication');
-    //       }
-    //     }
+    useEffect(() => {
+      const checkAuth = async () => {
+        if (!userInfo) {
+          try {
+            await refreshAuth(); // Use your context to refresh status
+          } catch (error) {
+            console.error('Error refreshing authentication');
+          }
+        }
 
-    //     if (!userInfo) {
-    //       // Check if still not logged in
-    //       router.push('/login?session_expired=true');
-    //     } else {
-    //       setIsLoading(false);
-    //     }
-    //   };
+        if (!userInfo) {
+          // Check if still not logged in
+          router.push('/login?session_expired=true');
+        } else {
+          setIsLoading(false);
+        }
+      };
 
-    //   checkAuth();
-    // }, [router, userInfo, refreshAuth]);
+      checkAuth();
+    }, [router, userInfo, refreshAuth]);
 
-    // if (isLoading) {
-    //   return <div>Checking authentication...</div>; // Enhanced loading UX
-    // }
+    if (isLoading) {
+      return <div>Checking authentication...</div>; // Enhanced loading UX
+    }
 
     return <WrappedComponent {...props} />;
   };

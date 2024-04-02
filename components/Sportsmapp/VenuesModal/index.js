@@ -40,7 +40,7 @@ const VenuesModal = ({
       };
 
       await createVenue(venue);
-      onVenueCreated(); // Call the function to handle venue creation success
+      onVenueCreated();
     } catch (error) {
       console.error(error);
     } finally {
