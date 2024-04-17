@@ -126,8 +126,8 @@ const MatchesPage = () => {
   ];
 
   const handleMatchCreated = async () => {
-    await fetchMatches();
     toggleModal();
+    await fetchMatches();
   };
 
   const handlePitchRefetch = async () => {
