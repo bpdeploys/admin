@@ -1,5 +1,5 @@
 import DashboardBox from '../../components/DashboardBox';
-import Layout from '../../components/Layout/LayoutWrapper';
+import Layout from '../../components/Layout/sportmapp/LayoutWrapper';
 import withAuth from '../../hoc/withAuth';
 import styles from './dashboard.module.scss';
 
@@ -29,6 +29,7 @@ const dashboardItems = [
   },
   {
     name: 'Marketing Solutions',
+    route: '/marketing-solutions',
   },
   {
     name: 'Admin',

@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 20px;
+}
+
+.logoButton {
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 2rem;
+}
+
+.logoImage {
+  object-fit: cover;
+  border-radius: 50%;
+  height: 120px;
+  width: 120px;
+}
+
+.inputField {
+  &::placeholder {
+    color: #000;
+  }
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #000;
+  color: #000;
+  margin: 10px 0;
+  padding: 10px 0;
+  width: 80%;
+}
+
+.categories {
+  width: 80%;
+  margin-top: 2rem;
+}
+
+.categoryButton {
+  border: 2px solid #125b9f;
+  color: #125b9f;
+  padding: 10px 13px;
+  background-color: transparent;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 50px;
+}
+
+.categoryButton.selected {
+  background-color: #125b9f;
+  color: #fff;
+}
+
+.submitButton {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 30px;
+  cursor: pointer;
+  width: 252px;
+  border-radius: 10px;
+  margin-top: 2rem;
+}

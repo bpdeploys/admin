@@ -1,10 +1,10 @@
 import styles from './loading.module.scss';
 
-const Loading = () => {
+const Loading = ({ color = '#125b9f' }) => {
   return (
     <div className={styles.ldsRipple}>
-      <div></div>
-      <div></div>
+      <div style={{ borderColor: color }}></div>
+      <div style={{ borderColor: color }}></div>
     </div>
   );
 };

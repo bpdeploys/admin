@@ -4,7 +4,7 @@ import ProviderModal from '../../components/Sportsmapp/ProviderModal';
 import BlueButton from '../../components/Sportsmapp/BlueBtn';
 import GreenArrowButton from '../../components/Sportsmapp/GreenArrowBtn';
 import Breadcrumbs from '../../components/Sportsmapp/Breadcrumbs';
-import Layout from '../../components/Layout/LayoutWrapper';
+import Layout from '../../components/Layout/sportmapp/LayoutWrapper';
 import TagBox from '../../components/Common/TagBox';
 import { useSportsmappContext } from '../../context/SportsmappContext';
 import { useRouter } from 'next/router';

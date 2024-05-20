@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import styles from './sidebar.module.scss';
-import { useAuth } from '../../../context/useAuth';
+import { useAuth } from '../../../../context/useAuth';
 
 const Sidebar = () => {
   const { logout } = useAuth();
@@ -9,22 +9,25 @@ const Sidebar = () => {
   return (
     <aside className={styles.sidebar}>
       <nav>
-        <h4>Settings</h4>
+        <h4>Solutions</h4>
         <ul>
           <li>
-            <Link href="/profile">Profile</Link>
+            <Link href="/profile">Affiliate Marketing</Link>
           </li>
           <li>
-            <Link href="/apps">Apps</Link>
+            <Link href="/apps">Advertising</Link>
           </li>
           <li>
-            <Link href="/about">About Baller Inc</Link>
+            <Link href="/about">Auction</Link>
           </li>
           <li>
-            <Link href="/vacancies">Vacancies</Link>
+            <Link href="/vacancies">Companies</Link>
           </li>
           <li>
-            <div onClick={() => logout()}>Sign Out</div>
+            <Link href="/vacancies">Countries</Link>
+          </li>
+          <li>
+            <Link href="/vacancies">Settings</Link>
           </li>
         </ul>
       </nav>

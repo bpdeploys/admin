@@ -1,0 +1,29 @@
+.sidebar {
+  nav {
+    width: 220px;
+    background: white;
+    height: 80vh;
+    margin: 10px;
+    border-radius: 5px;
+  }
+
+  h4 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 50px;
+    border-bottom: 1px solid lightgray;
+  }
+
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin-left: 15px;
+
+    li {
+      padding: 10px;
+      cursor: pointer;
+    }
+  }
+}

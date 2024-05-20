@@ -8,18 +8,20 @@ import styles from './greenarrowbtn.module.scss';
  * @param {Function} onClick - Function to call when button is clicked.
  * @param {string} text - The text to display on the button.
  */
-const GreenArrowButton = ({ onClick, text }) => {
+const GreenArrowButton = ({ onClick, text, arrow = true }) => {
   return (
     <button className={styles.greenArrowButton} onClick={onClick}>
       {text}
-      <span className={styles.icon}>
-        <Image
-          src="/assets/imgs/svgs/whiteArrowRight.svg"
-          alt="Arrow icon"
-          width={20}
-          height={20}
-        />
-      </span>
+      {arrow && (
+        <span className={styles.icon}>
+          <Image
+            src="/assets/imgs/svgs/whiteArrowRight.svg"
+            alt="Arrow icon"
+            width={20}
+            height={20}
+          />
+        </span>
+      )}
     </button>
   );
 };
