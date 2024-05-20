@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import styles from './leagues.module.scss';
 import TagBox from '../../../../components/Common/TagBox';
-import Layout from '../../../../components/Layout/LayoutWrapper';
+import Layout from '../../../../components/Layout/sportmapp/LayoutWrapper';
 import Breadcrumbs from '../../../../components/Sportsmapp/Breadcrumbs';
 import { useRouter } from 'next/router';
 import { useSportsmappContext } from '../../../../context/SportsmappContext';

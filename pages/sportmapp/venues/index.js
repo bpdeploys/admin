@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Layout from '../../../components/Layout/LayoutWrapper';
+
 import Breadcrumbs from '../../../components/Sportsmapp/Breadcrumbs';
 import BlueButton from '../../../components/Sportsmapp/BlueBtn';
 import GreenArrowButton from '../../../components/Sportsmapp/GreenArrowBtn';
@@ -14,6 +14,7 @@ import withAuth from '../../../hoc/withAuth';
 import { useLoading } from '../../../utils/hooks/useLoading';
 import Loading from '../../../components/Common/Loading';
 import CreateGeneralOverseerModal from '../../../components/Sportsmapp/CreateGeneralOverseerModal';
+import Layout from '../../../components/Layout/sportmapp/LayoutWrapper';
 
 const VenuesPage = () => {
   const router = useRouter();
