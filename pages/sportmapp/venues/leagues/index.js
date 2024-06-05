@@ -208,6 +208,10 @@ const LeaguesPage = () => {
             <Breadcrumbs />
           </div>
           <div>
+            <BlueButton
+              text="Venue Metrics"
+              onClick={() => router.push('/sportmapp/venues/leagues/metrics')}
+            />
             <GreenArrowButton
               text="Create New League"
               onClick={() => toggleModal()}

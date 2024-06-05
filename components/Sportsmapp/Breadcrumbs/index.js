@@ -3,7 +3,7 @@ import { useSportsmappContext } from '../../../context/SportsmappContext';
 import BreadcrumbDivider from '../../Common/BreadcrumbDivider';
 import styles from './breadcrumbs.module.scss';
 
-const Breadcrumbs = () => {
+const Breadcrumbs = ({ customValue }) => {
   const { selectedProvider, selectedVenue, selectedLeague } =
     useSportsmappContext();
 
@@ -28,6 +28,12 @@ const Breadcrumbs = () => {
         <Link href="/sportmapp/venues/leagues">
           <BreadcrumbDivider />
           <span>{selectedLeague.league_name}</span>
+        </Link>
+      )}
+      {customValue && (
+        <Link href="/sportmapp/venues/leagues">
+          <BreadcrumbDivider />
+          <span>{customValue}</span>
         </Link>
       )}
     </div>

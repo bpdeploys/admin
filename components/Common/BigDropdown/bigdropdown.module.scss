@@ -1,0 +1,35 @@
+.select {
+  /* Reset */
+  appearance: none;
+  border: 0;
+  outline: 0;
+  font: inherit;
+
+  /* Personalize */
+  width: 15rem;
+  padding: 1rem 4rem 1rem 1rem;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="6" height="4" viewBox="0 0 18 15" fill="none"><path d="M9 15L0.339745 0L17.6603 0L9 15Z" fill="black"/></svg>');
+  background-color: #f2f1f1;
+  color: black;
+  border-radius: 0.25em;
+  cursor: pointer;
+  background-position: right 0.8em center;
+  background-size: 1.4em;
+  background-repeat: no-repeat;
+
+  /* Remove IE arrow */
+  &::-ms-expand {
+    display: none;
+  }
+
+  /* Remove focus outline */
+  &:focus {
+    outline: none;
+  }
+
+  /* <option> colors */
+  option {
+    color: inherit;
+    background-color: white;
+  }
+}

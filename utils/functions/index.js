@@ -18,6 +18,27 @@ export function convertToPascalCase(input) {
   return pascalCaseText;
 }
 
+export const exportToCsv = (data, filename, callback) => {
+  import('papaparse').then((Papa) => {
+    const csv = Papa.unparse(data);
+    const csvData = new Blob([new Uint8Array([0xef, 0xbb, 0xbf]), csv], {
+      type: 'text/csv;charset=utf-8;',
+    }); // Adding UTF-8 BOM
+    const csvUrl = URL.createObjectURL(csvData);
+
+    const tempLink = document.createElement('a');
+    tempLink.href = csvUrl;
+    tempLink.setAttribute('download', filename);
+    tempLink.click();
+
+    URL.revokeObjectURL(csvUrl);
+
+    if (callback) {
+      callback();
+    }
+  });
+};
+
 export function getRandomNumber() {
   return Math.floor(Math.random() * (100000 - 1) + 1);
 }
